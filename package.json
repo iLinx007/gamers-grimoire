@@ -1,7 +1,7 @@
 {
   "name": "final-project-ilinx007",
   "version": "1.0.0",
-  "description": "The content below is an example project proposal / requirements document. Replace the text below the lines marked \"__TODO__\" with details specific to your project. Remove the \"TODO\" lines.",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,9 +16,5 @@
   "bugs": {
     "url": "https://github.com/nyu-csci-ua-0467-001-002-fall-2024/final-project-iLinx007/issues"
   },
-  "homepage": "https://github.com/nyu-csci-ua-0467-001-002-fall-2024/final-project-iLinx007#readme",
-  "dependencies": {
-    "express": "^4.21.1",
-    "mongoose": "^8.8.0"
-  }
+  "homepage": "https://github.com/nyu-csci-ua-0467-001-002-fall-2024/final-project-iLinx007#readme"
 }

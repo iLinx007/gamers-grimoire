@@ -93,19 +93,19 @@ An Example List with Embedded Items:
 
 / - Home Page
 
-![list create](documentation/landing_page.png)
+![list create](landing_page.png)
 
 /createUser - page for adding a new user
 
-![list](documentation/createUser_page.png)
+![list](createUser_page.png)
 
 /user - page showing user information
 
-![list](documentation/user_page.png)
+![list](user_page.png)
 
 /login - login page
 
-![list](documentation/login_page.png)
+![list](login_page.png)
 
 ## Site map
  # Gamer's Grimoire Sitemap
