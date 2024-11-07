@@ -1,17 +1,41 @@
-import express from 'express'
-import path from 'path'
+import express from 'express';
+import path from 'path';
 import { fileURLToPath } from 'url';
+import session from 'express-session';
+import mongoose from 'mongoose';
+import User from './models/user.mjs';
+import authRoutes from './routes/auth.mjs';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// MongoDB connection
+console.log('Connected to MongoDB');
+console.log(process.env.MONGO);
+mongoose.connect(process.env.MONGO);
+console.log('Connected to MongoDB');
 
+// Middleware setup
+app.use(express.json()); // Body parser for JSON data
+app.use(session({
+  secret: 'secret',
+  resave: false,
+  saveUninitialized: false 
+}));
+
+// Set up the routes
+app.use('/auth', authRoutes); // Route for authentication
+app.use('/api', authRoutes); 
+
+// Handle base route
 app.get('/', (req, res) => {
-    res.send('Game Backlog Tracker');
-  });
+  res.send('Gamer\'s Grimoire');
+});
 
-app.listen(process.env.PORT || 3000, () => {
-    console.log(`Server is running on port ${port}`);
+// Start server
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
