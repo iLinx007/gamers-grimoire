@@ -1,9 +1,14 @@
-// routes/authRoutes.js
 import express from 'express';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import User from '../models/user.mjs';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+
+dotenv.config();  // Initialize dotenv to use environment variables
 
 const router = express.Router();
+const TOKEN_SECRET = process.env.TOKEN_SECRET;
 
 // Registration route
 router.post('/register', async (req, res) => {
@@ -16,8 +21,13 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ message: 'Username already exists' });
     }
 
-    // Create a new user with the hashed password
-    const newUser = new User({ username, password });
+    // Hash the password before saving
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(password, salt);
+    // const hashedPassword = await bcrypt.hash(password, 10);
+    console.log('Hashed password during registration:', hash);
+
+    const newUser = new User({ username, password: hash });
     await newUser.save();
 
     res.status(201).json({ message: 'User registered successfully!' });
@@ -25,6 +35,7 @@ router.post('/register', async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
+
 
 // Login route
 router.post('/login', async (req, res) => {
@@ -37,28 +48,30 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Compare the password with the hashed password
-    const isMatch = await user.comparePassword(password);
+    console.log('Provided password:', password); // The password entered by the user
+    console.log('Stored hashed password in database:', user.password); // The hashed password from the database
+
+    // Compare the provided password with the stored hashed password
+    const isMatch = await bcrypt.compare(password, user.password); // Use async compare here
+
+    console.log('Password match:', isMatch); // Expecting true if passwords match
+
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    // Store the user's ID in the session to keep track of logged-in users
-    req.session.userId = user._id;
-    res.json({ message: 'Logged in successfully!' });
+    // Generate JWT
+    jwt.sign({ userId: user._id }, TOKEN_SECRET, { expiresIn: '1d' }, (err, token) => {
+      if (err) {
+        console.error('Error generating JWT:', err);
+        return res.status(500).json({ message: 'Internal server error' });
+      }
+      res.cookie('token', token, { httpOnly: true });
+      res.json({ message: "Logged in successfully!" });
+    });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
-});
-
-// Logout route
-router.post('/logout', (req, res) => {
-  req.session.destroy((err) => {
-    if (err) {
-      return res.status(400).json({ error: 'Failed to log out' });
-    }
-    res.json({ message: 'Logged out successfully!' });
-  });
 });
 
 

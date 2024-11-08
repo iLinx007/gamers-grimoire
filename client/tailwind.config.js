@@ -5,8 +5,12 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        edu: ['"Edu AU VIC WA NT Pre"', 'sans-serif'],
+        jaro: ['Jaro', 'sans-serif'], // Add Roboto as the default font
+      },
+    },
   },
   plugins: [],
-}
-
+};

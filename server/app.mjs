@@ -6,15 +6,15 @@ import mongoose from 'mongoose';
 import User from './models/user.mjs';
 import authRoutes from './routes/auth.mjs';
 import dotenv from 'dotenv';
+import cors from 'cors'; 
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 
 // MongoDB connection
-console.log('Connected to MongoDB');
-console.log(process.env.MONGO);
 mongoose.connect(process.env.MONGO);
 console.log('Connected to MongoDB');
 
@@ -23,8 +23,20 @@ app.use(express.json()); // Body parser for JSON data
 app.use(session({
   secret: 'secret',
   resave: false,
-  saveUninitialized: false 
+  saveUninitialized: false,
+  cookie: { secure: false }
 }));
+app.use(cookieParser());
+
+
+app.use(cors()); // Allow all origins (useful for development)
+
+app.use(cors({
+  origin: 'http://localhost:5173',  
+  methods: ['GET', 'POST'],  
+  credentials: true          
+}));
+
 
 // Set up the routes
 app.use('/auth', authRoutes); // Route for authentication
