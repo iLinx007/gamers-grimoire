@@ -1,6 +1,6 @@
 // routes/gameRoutes.mjs
 import express from 'express';
-import Game from '../models/Game.mjs'; // Ensure Game.mjs exists in your models directory
+import Game from '../models/game.mjs'; // Ensure Game.mjs exists in your models directory
 import { verifyToken } from '../middleware/authToken.mjs'; // Middleware to verify JWT
 
 const router = express.Router();

@@ -15,7 +15,7 @@ const Login = () => {
     try {
       // Send POST request to /api/login
       // const response = await axios.post('http://localhost:8080/api/login', { username, password }, { withCredentials: true });
-      const response = await api.post('http://localhost:8080/api/login', { username, password });
+      const response = await api.post('/login', { username, password });
       console.log(response);
 
       setMessage(response.data.message); // Success message from the backend

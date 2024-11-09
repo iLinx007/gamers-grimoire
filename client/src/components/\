@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../service/axios.mjs';
-//import axios from 'axios';
+import axios from 'axios';
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -14,8 +14,8 @@ const Register = () => {
 
     try {
       // Send POST request to /api/register
-      //const response = await axios.post('http://linserv1.cims.nyu.edu:31238/api/register', { username, password }, {withCredentials: true});
-      const response = await api.post('/register', { username, password });
+      const response = await axios.post('http://linserv1.cims.nyu.edu:31238/api/register', { username, password }, {withCredentials: true});
+      //const response = await api.post('/register', { username, password });
       console.log(response.data.message); // Success message from the backend
       alert('User registered successfully!');
     } catch (error) {
