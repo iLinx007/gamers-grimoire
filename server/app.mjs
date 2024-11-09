@@ -8,6 +8,7 @@ import authRoutes from './routes/auth.mjs';
 import dotenv from 'dotenv';
 import cors from 'cors'; 
 import cookieParser from 'cookie-parser';
+import gameRoutes from './routes/gameRoutes.mjs';
 
 dotenv.config();
 
@@ -40,7 +41,8 @@ app.use(cors({
 
 // Set up the routes
 app.use('/auth', authRoutes); // Route for authentication
-app.use('/api', authRoutes); 
+app.use('/api', authRoutes);
+app.use('/api/games', gameRoutes);  
 
 // Handle base route
 app.get('/', (req, res) => {

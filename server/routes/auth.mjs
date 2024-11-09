@@ -24,8 +24,6 @@ router.post('/register', async (req, res) => {
     // Hash the password before saving
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(password, salt);
-    // const hashedPassword = await bcrypt.hash(password, 10);
-    console.log('Hashed password during registration:', hash);
 
     const newUser = new User({ username, password: hash });
     await newUser.save();
@@ -36,7 +34,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-
+ 
 // Login route
 router.post('/login', async (req, res) => {
   try {
@@ -48,13 +46,8 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    console.log('Provided password:', password); // The password entered by the user
-    console.log('Stored hashed password in database:', user.password); // The hashed password from the database
-
     // Compare the provided password with the stored hashed password
     const isMatch = await bcrypt.compare(password, user.password); // Use async compare here
-
-    console.log('Password match:', isMatch); // Expecting true if passwords match
 
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
