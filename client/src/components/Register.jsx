@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { api } from '../service/axios.mjs';
+
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -13,7 +14,8 @@ const Register = () => {
 
     try {
       // Send POST request to /api/register
-      const response = await axios.post('http://localhost:8080/api/register', { username, password });
+      // const response = await axios.post('http://localhost:8080/api/register', { username, password });
+      const response = await api.post('/register', { username, password });
       console.log(response.data.message); // Success message from the backend
       alert('User registered successfully!');
     } catch (error) {

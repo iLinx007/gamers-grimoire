@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { api } from '../service/axios.mjs';
 
 const AddGame = () => {
   const [title, setTitle] = useState('');
@@ -16,8 +16,7 @@ const AddGame = () => {
     setSuccessMessage(null);
 
     try {
-      const response = await axios.post(
-        'http://localhost:8080/api/games/add',
+      const response = await api.post('/games/add',
         {
           title,
           description,

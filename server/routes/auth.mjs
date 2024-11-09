@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
 
-dotenv.config();  // Initialize dotenv to use environment variables
+dotenv.config();
 
 const router = express.Router();
 const TOKEN_SECRET = process.env.TOKEN_SECRET;

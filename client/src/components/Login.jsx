@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { api } from '../service/axios.mjs';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -14,8 +14,9 @@ const Login = () => {
 
     try {
       // Send POST request to /api/login
-      console.log('Sending login request:', { username, password });
-      const response = await axios.post('http://localhost:8080/api/login', { username, password }, { withCredentials: true });
+      // const response = await axios.post('http://localhost:8080/api/login', { username, password }, { withCredentials: true });
+      const response = await api.post('http://localhost:8080/api/login', { username, password });
+      console.log(response);
 
       setMessage(response.data.message); // Success message from the backend
       alert('Login successful!');
