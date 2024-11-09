@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import api from '../services/api';
 
 const GameDetails = () => {
-  const { gameId } = useParams();
-  const [game, setGame] = useState(null);
-  const [rating, setRating] = useState(0);
-  const [feedback, setFeedback] = useState('');
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const { gameId } = useParams(); // Get the game ID from the URL
+  const [game, setGame] = useState(null); // To store game details
+  const [rating, setRating] = useState(''); // To store the user rating input
+  const [feedback, setFeedback] = useState(''); // To store feedback input
+  const [error, setError] = useState(null); // To handle any error messages
 
   useEffect(() => {
+    // Fetch game details when the component loads
     const fetchGameDetails = async () => {
       try {
-        const response = await api.get(`/games/${gameId}`);
+        const response = await axios.get(`http://localhost:8080/games/${gameId}`, {
+          withCredentials: true, // Ensure cookies are sent with the request
+        });
         setGame(response.data.game);
       } catch (error) {
+        console.error('Error fetching game details:', error);
         setError('Failed to load game details');
       }
     };
@@ -24,53 +27,42 @@ const GameDetails = () => {
 
   const handleRatingSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
-
     try {
-      await api.post(`/games/${gameId}/rate`, { rating, feedback });
-      setSuccess('Rating added successfully!');
+      const response = await axios.post(
+        `http://localhost:8080/games/${gameId}/rate`,
+        { rating, feedback },
+        { withCredentials: true } // Send cookies with the request
+      );
+      setGame(response.data.game); // Update game details with the new rating
+      setRating(''); // Clear input fields after submitting
       setFeedback('');
-      setRating(0);
-      const response = await api.get(`/games/${gameId}`);
-      setGame(response.data.game);
+      setError(null);
     } catch (error) {
-      setError(error.response?.data?.message || 'Failed to submit rating');
+      console.error('Error submitting rating:', error);
+      setError('Failed to submit rating');
     }
   };
 
-  if (!game) return <p>Loading game details...</p>;
+  if (error) {
+    return <div>{error}</div>;
+  }
+
+  if (!game) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
       <h2>{game.title}</h2>
-      <p><strong>Description:</strong> {game.description}</p>
-      <p><strong>Genre:</strong> {game.genre}</p>
-      <p><strong>Platform:</strong> {game.platform}</p>
-      <p><strong>Release Date:</strong> {game.releaseDate}</p>
-      <p><strong>Average Rating:</strong> {game.averageRating || 'Not rated yet'}</p>
+      <p>{game.description}</p>
+      <p>Genre: {game.genre}</p>
+      <p>Platform: {game.platform}</p>
+      <p>Release Date: {new Date(game.releaseDate).toLocaleDateString()}</p>
+      <p>Average Rating: {game.averageRating || 'No ratings yet'}</p>
 
-      <h3>Ratings & Feedback</h3>
-      {game.ratings.length > 0 ? (
-        <ul>
-          {game.ratings.map((rate, index) => (
-            <li key={index}>
-              <p><strong>User:</strong> {rate.userId}</p>
-              <p><strong>Rating:</strong> {rate.rating}</p>
-              <p><strong>Feedback:</strong> {rate.feedback}</p>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No ratings yet. Be the first to rate!</p>
-      )}
-
-      <h3>Submit Your Rating</h3>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {success && <p style={{ color: 'green' }}>{success}</p>}
       <form onSubmit={handleRatingSubmit}>
         <label>
-          Rating (1-5):
+          Rating:
           <input
             type="number"
             min="1"
@@ -85,11 +77,20 @@ const GameDetails = () => {
           <textarea
             value={feedback}
             onChange={(e) => setFeedback(e.target.value)}
-            required
           />
         </label>
         <button type="submit">Submit Rating</button>
       </form>
+
+      <h3>Ratings and Feedback</h3>
+      <ul>
+        {game.ratings.map((rate, index) => (
+          <li key={index}>
+            <p>Rating: {rate.rating}</p>
+            <p>Feedback: {rate.feedback}</p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [message, setMessage] = useState(''); // For displaying login status message
+  const [message, setMessage] = useState('');
+  const navigate = useNavigate(); // Initialize the navigate hook
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -14,10 +15,13 @@ const Login = () => {
     try {
       // Send POST request to /api/login
       console.log('Sending login request:', { username, password });
-      const response = await axios.post('http://localhost:8080/api/login', { username, password });
+      const response = await axios.post('http://localhost:8080/api/login', { username, password }, { withCredentials: true });
 
       setMessage(response.data.message); // Success message from the backend
       alert('Login successful!');
+      
+      // Redirect to "Add Game" page after successful login
+      navigate('/addgame'); // Change '/add-game' to the route of your "Add Game" page
     } catch (error) {
       console.error('Error logging in:', error.response?.data?.message || error.message);
       setMessage(error.response?.data?.message || 'Error logging in');
@@ -71,6 +75,5 @@ const Login = () => {
     </div>
   );
 };
-
 
 export default Login;

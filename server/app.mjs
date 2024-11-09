@@ -29,12 +29,9 @@ app.use(session({
 }));
 app.use(cookieParser());
 
-
-app.use(cors()); // Allow all origins (useful for development)
-
 app.use(cors({
   origin: 'http://localhost:5173',  
-  methods: ['GET', 'POST'],  
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],  
   credentials: true          
 }));
 
