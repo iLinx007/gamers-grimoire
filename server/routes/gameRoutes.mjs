@@ -87,4 +87,29 @@ router.get('/user/:id', verifyToken, async (req, res) => {
   }
 });
 
+// In your user routes file
+router.post('/users/:id/add-game', verifyToken, async (req, res) => {
+  const { gameId } = req.body; // Get the game ID from the request body
+
+  try {
+    // Find user by ID and update their gamesList
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Add the gameId to the user's gamesList if it's not already present
+    if (!user.gamesList.includes(gameId)) {
+      user.gamesList.push(gameId);
+      await user.save();
+      return res.status(200).json({ message: 'Game added successfully!' });
+    } else {
+      return res.status(400).json({ message: 'Game already in your list.' });
+    }
+  } catch (error) {
+    console.error('Error adding game to user:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 export default router;

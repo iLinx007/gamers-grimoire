@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../service/axios.mjs'; // Adjust path as necessary
 
 const AddGame = () => {
@@ -9,6 +10,7 @@ const AddGame = () => {
   const [releaseDate, setReleaseDate] = useState('');
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,6 +41,7 @@ const AddGame = () => {
       setGenre('');
       setPlatform('');
       setReleaseDate('');
+      navigate(-1);
     } catch (error) {
       console.error('Error adding game:', error.response?.data || error.message);
       setError(error.response?.data?.message || 'Failed to add game. Please try again.');
