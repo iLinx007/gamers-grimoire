@@ -16,7 +16,8 @@ const Login = () => {
       if (result.success) {
         setMessage(result.message);
         alert('Login successful!');
-        navigate('/addgame');
+        // navigate('/addgame');
+        navigate('/games/all')
       } else {
         setMessage(result.message);
       }

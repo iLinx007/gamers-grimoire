@@ -33,11 +33,6 @@ router.post('/register', async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 });
-
- 
-
-
-
 // Middleware to verify JWT
 const verifyToken = (req, res, next) => {
   const token = req.cookies.token; // Assuming the token is stored in a cookie
@@ -79,11 +74,8 @@ router.get('/session', (req, res) => {
       return res.json({ loggedIn: false });
     }
     
-    console.log('Decoded JWT:', decoded); // Log decoded JWT
-    
     try {
       const user = await User.findById(decoded.userId); // Fetch user by ID
-      console.log('Fetched user:', user); // Log fetched user
       
       if (!user) {
         return res.json({ loggedIn: false });

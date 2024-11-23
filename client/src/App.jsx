@@ -7,6 +7,7 @@ import Register from './components/Register';
 import GameDetails from './components/GameDetails';
 import AddGame from './components/AddGame';
 import UserProfile from './components/UserProfile';
+import Games from './components/GamesPage';
 import { Route } from 'react-router-dom';
 import { Routes } from 'react-router-dom';
 
@@ -21,6 +22,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/addgame" element={<AddGame />} />
+          <Route path="/games/all" element={<Games />} />
           <Route path="/games/:gameId" element={<GameDetails />} />
       </Routes>
       

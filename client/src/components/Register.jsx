@@ -1,25 +1,25 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import {Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import api from '../service/axios.mjs';
-//import axios from 'axios';
 
 const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  
+  const navigate = useNavigate(); // Initialize useNavigate
 
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      // Send POST request to /api/register
-      //const response = await axios.post('http://linserv1.cims.nyu.edu:31238/api/register', { username, password }, {withCredentials: true});
       const response = await api.post('/register', { username, password });
-      console.log(response.data.message); // Success message from the backend
+      console.log(response.data.message);
       alert('User registered successfully!');
+      
+      navigate('/login'); // Change this path if your login route is different
     } catch (error) {
-	console.log(error);
       console.error('Error registering user:', error.response?.data?.message || error.message);
       alert('Error registering user');
     }

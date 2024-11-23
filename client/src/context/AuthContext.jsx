@@ -128,8 +128,6 @@ export const AuthProvider = ({ children }) => {
       const avatarNumber = generateAvatarNumber();
       setAvatarNumber(avatarNumber);
   
-      // Log the entire response data for debugging
-      console.log('Login response data:', data);
   
       // Set user state with username and id received from the response
       setUser({ username: data.user.username, id: data.user.id }); // Use destructuring to get username and id
