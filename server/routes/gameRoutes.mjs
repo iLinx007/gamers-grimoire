@@ -26,6 +26,15 @@ router.post('/add', verifyToken, async (req, res) => {
   }
 });
 
+router.get('/all', async (req, res) => {
+  try {
+    const games = await Game.find();
+    res.json(games);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching games', error: error.message });
+  }
+});
+
 // Route to add a rating to a game
 router.post('/:gameId/rate', verifyToken, async (req, res) => {
   try {

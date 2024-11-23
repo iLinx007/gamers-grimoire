@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
       setAvatarNumber(null);
       localStorage.removeItem('userAvatarSrc');
       if (typeof navigate === 'function') {
-        navigate('/login');
+        navigate('/');
       }
     } catch (error) {
       console.error('Error logging out:', error);

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import api from '../service/axios.mjs';
+import api from '../service/axios.mjs'; // Adjust path as necessary
 
 const AddGame = () => {
   const [title, setTitle] = useState('');
@@ -16,26 +16,32 @@ const AddGame = () => {
     setSuccessMessage(null);
 
     try {
+      // Format the release date to ISO string
+      const formattedReleaseDate = new Date(releaseDate).toISOString();
+
       const response = await api.post('/games/add',
         {
           title,
           description,
           genre,
           platform,
-          releaseDate,
+          releaseDate: formattedReleaseDate,
         },
-        { withCredentials: true } // Include credentials for the cookie-based auth
+        { 
+          withCredentials: true // Include credentials for cookie-based auth
+        }
       );
 
       setSuccessMessage(response.data.message); // Display success message
-      setTitle(''); // Clear form fields after submission
+      // Clear form fields after submission
+      setTitle('');
       setDescription('');
       setGenre('');
       setPlatform('');
       setReleaseDate('');
     } catch (error) {
-      console.error('Error adding game:', error);
-      setError('Failed to add game. Please try again.');
+      console.error('Error adding game:', error.response?.data || error.message);
+      setError(error.response?.data?.message || 'Failed to add game. Please try again.');
     }
   };
 
