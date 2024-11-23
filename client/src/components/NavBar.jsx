@@ -66,12 +66,14 @@ const Navbar = () => {
           {user ? (
             <>
               <li className="flex items-center space-x-2">
-                <img
-                  src={getAvatarSrc(avatarNumber)}
-                  alt="User Avatar"
-                  className="w-8 h-8 rounded-full"
-                />
-                <span className="text-green-500">{user}</span>
+                <Link to="/profile" className="flex items-center">
+                  <img
+                    src={getAvatarSrc(avatarNumber)}
+                    alt="User Avatar"
+                    className="w-8 h-8 rounded-full"
+                  />
+                  <span className="text-green-500 ml-2">{user.username}</span>
+                </Link>
               </li>
               <button
                 onClick={handleLogout}

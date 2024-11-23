@@ -68,28 +68,42 @@ const verifyToken = (req, res, next) => {
 // });
 
 router.get('/session', (req, res) => {
-  const token = req.cookies.token;
+  const token = req.cookies.token; // Assuming you're using cookies to store the JWT
   if (!token) {
     return res.json({ loggedIn: false });
   }
 
   jwt.verify(token, TOKEN_SECRET, async (err, decoded) => {
     if (err) {
+      console.error('JWT verification error:', err); // Log JWT errors
       return res.json({ loggedIn: false });
     }
+    
+    console.log('Decoded JWT:', decoded); // Log decoded JWT
+    
     try {
-      const user = await User.findById(decoded.userId, 'username');
+      const user = await User.findById(decoded.userId); // Fetch user by ID
+      console.log('Fetched user:', user); // Log fetched user
+      
       if (!user) {
         return res.json({ loggedIn: false });
       }
-      res.json({ loggedIn: true, username: user.username });
+      
+      res.json({
+        loggedIn: true,
+        user: {
+          username: user.username,
+          id: decoded.userId, // Ensure you convert to string if needed
+        },
+      });
     } catch (error) {
+      console.error('Error fetching user:', error); // Log error for debugging
       res.status(500).json({ error: 'Server error' });
     }
   });
 });
 
-
+// Login route
 // Login route
 router.post('/login', async (req, res) => {
   try {
@@ -114,10 +128,21 @@ router.post('/login', async (req, res) => {
         console.error('Error generating JWT:', err);
         return res.status(500).json({ message: 'Internal server error' });
       }
+      
+      // Set the token in a cookie
       res.cookie('token', token, { httpOnly: true });
-      res.json({ message: "Logged in successfully!" });
+
+      // Return user information along with success message
+      res.json({
+        message: "Logged in successfully!",
+        user: {
+          username: user.username,
+          id: user._id.toString(), // Ensure ID is returned as a string
+        },
+      });
     });
   } catch (error) {
+    console.error('Login error:', error); // Log error for debugging
     res.status(400).json({ error: error.message });
   }
 });

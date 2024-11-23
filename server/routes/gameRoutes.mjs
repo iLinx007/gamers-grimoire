@@ -1,6 +1,7 @@
 // routes/gameRoutes.mjs
 import express from 'express';
 import Game from '../models/game.mjs'; // Ensure Game.mjs exists in your models directory
+import User from '../models/user.mjs'; // Adjust the path as necessary
 import { verifyToken } from '../middleware/authToken.mjs'; // Middleware to verify JWT
 
 const router = express.Router();
@@ -61,6 +62,28 @@ router.post('/:gameId/rate', verifyToken, async (req, res) => {
     res.status(201).json({ message: 'Rating added successfully', game });
   } catch (error) {
     res.status(500).json({ error: error.message });
+  }
+});
+
+// Get user by ID
+router.get('/user/:id', verifyToken, async (req, res) => {
+  try {
+    // Fetch user by ID and exclude the password field from the response
+    const user = await User.findById(req.params.id).select('-password'); 
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Return the user data
+    res.json({
+      id: user._id.toString(), // Convert to string if needed
+      username: user.username,
+      gamesList: user.gamesList, // Include gamesList if needed
+      // Add any other fields you want to return
+    });
+  } catch (error) {
+    console.error('Error fetching user profile:', error); // Log error for debugging
+    res.status(500).json({ message: 'Error fetching user profile', error: error.message });
   }
 });
 

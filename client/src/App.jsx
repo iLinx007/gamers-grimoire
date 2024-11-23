@@ -6,6 +6,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import GameDetails from './components/GameDetails';
 import AddGame from './components/AddGame';
+import UserProfile from './components/UserProfile';
 import { Route } from 'react-router-dom';
 import { Routes } from 'react-router-dom';
 
@@ -16,6 +17,7 @@ function App() {
       <Navbar />
       <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<UserProfile />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/addgame" element={<AddGame />} />
