@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { api } from '../service/axios.mjs';
+import api from '../service/axios.mjs';
 
 const AddGame = () => {
   const [title, setTitle] = useState('');

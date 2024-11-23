@@ -19,7 +19,7 @@ const port = process.env.PORT || 8080;
 mongoose.connect(process.env.DSN);
 
 // Middleware setup
-app.use(express.json()); // Body parser for JSON data
+app.use(express.json());
 app.use(session({
   secret: 'secret',
   resave: false,
@@ -36,7 +36,7 @@ app.use(cors({
 
 
 // Set up the routes
-app.use('/auth', authRoutes); // Route for authentication
+// app.use('/auth', authRoutes);
 app.use('/api', authRoutes);
 app.use('/api/games', gameRoutes);  
 

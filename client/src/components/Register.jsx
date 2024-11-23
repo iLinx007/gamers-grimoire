@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { api } from '../service/axios.mjs';
+import api from '../service/axios.mjs';
 //import axios from 'axios';
 
 const Register = () => {
@@ -37,7 +37,7 @@ const Register = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
             />
           </div>
           <div>
@@ -47,12 +47,12 @@ const Register = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
             />
           </div>
           <button
             type="submit"
-            className="w-full py-2 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition duration-200"
+            className="w-full py-2 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition duration-200"
           >
             Register
           </button>
@@ -61,7 +61,7 @@ const Register = () => {
             <p className="text-gray-700">Have an account?</p>
             <Link
               to="/login"
-              className="mt-2 inline-block py-2 px-4 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition duration-200"
+              className="mt-2 inline-block py-2 px-4 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition duration-200"
             >
               Login
             </Link>
