@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import {Link, useNavigate } from 'react-router-dom'; // Import useNavigate
 import api from '../service/axios.mjs';
+import { useSnackbar } from 'notistack';
 
 const Register = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
+  const { enqueueSnackbar } = useSnackbar(); 
   
   const navigate = useNavigate(); // Initialize useNavigate
 
@@ -15,13 +17,16 @@ const Register = () => {
 
     try {
       const response = await api.post('/register', { username, password });
-      console.log(response.data.message);
-      alert('User registered successfully!');
+      // console.log(response.data.message);
+      // alert('User registered successfully!');
+      enqueueSnackbar(response.data.message, { variant: 'success' });
       
       navigate('/login'); // Change this path if your login route is different
     } catch (error) {
       console.error('Error registering user:', error.response?.data?.message || error.message);
-      alert('Error registering user');
+      // alert('Error registering user');
+      setMessage(error.response?.data?.message || 'An error occurred during registration');
+      enqueueSnackbar(error.response?.data?.message || 'An error occurred during registration', { variant: 'error' });
     }
   };
 
@@ -67,7 +72,7 @@ const Register = () => {
             </Link>
           </div>
         </form>
-        {message && <p className="mt-4 text-red-500 text-center">{message}</p>}
+        {/* {message && <p className="mt-4 text-red-500 text-center">{message}</p>} */}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../service/axios.mjs'; // Adjust path as necessary
+import { useSnackbar } from 'notistack';
 
 const AddGame = () => {
   const [title, setTitle] = useState('');
@@ -11,6 +12,7 @@ const AddGame = () => {
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,6 +37,7 @@ const AddGame = () => {
       );
 
       setSuccessMessage(response.data.message); // Display success message
+      enqueueSnackbar(response.data.message, { variant: 'success' });
       // Clear form fields after submission
       setTitle('');
       setDescription('');

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { SnackbarProvider } from 'notistack';
 import './App.css';
 import Home from './components/Home';
 import Navbar from './components/NavBar';
@@ -13,7 +14,8 @@ import { Routes } from 'react-router-dom';
 
 function App() {
   return (
-    // <div className="font-edu text-lg">
+    <SnackbarProvider maxStack={3}>
+    {/* <div className="font-edu text-lg"> */}
       <div className="font-jaro text-lg">
       <Navbar />
       <Routes>
@@ -27,6 +29,7 @@ function App() {
       </Routes>
       
     </div>
+    </SnackbarProvider>
   );
 }
 

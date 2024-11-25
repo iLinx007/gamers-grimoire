@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import { useSnackbar } from 'notistack';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -8,6 +9,7 @@ const Login = () => {
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
   const { login } = useContext(AuthContext);
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,7 +17,7 @@ const Login = () => {
       const result = await login(username, password);
       if (result.success) {
         setMessage(result.message);
-        alert('Login successful!');
+        enqueueSnackbar(result.message, { variant: 'success' });
         // navigate('/addgame');
         navigate('/games/all')
       } else {
