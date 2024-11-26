@@ -9,6 +9,7 @@ import GameDetails from './components/GameDetails';
 import AddGame from './components/AddGame';
 import UserProfile from './components/UserProfile';
 import Games from './components/GamesPage';
+import SearchResults from './components/SearchResults';
 import { Route } from 'react-router-dom';
 import { Routes } from 'react-router-dom';
 
@@ -21,6 +22,7 @@ function App() {
       <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/profile" element={<UserProfile />} />
+          <Route path="/search" element={<SearchResults />} />          
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/addgame" element={<AddGame />} />

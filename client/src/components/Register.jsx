@@ -17,8 +17,6 @@ const Register = () => {
 
     try {
       const response = await api.post('/register', { username, password });
-      // console.log(response.data.message);
-      // alert('User registered successfully!');
       enqueueSnackbar(response.data.message, { variant: 'success' });
       
       navigate('/login'); // Change this path if your login route is different

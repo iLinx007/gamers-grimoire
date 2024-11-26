@@ -9,8 +9,8 @@ const Games = () => {
   useEffect(() => {
     const fetchGames = async () => {
       try {
-        const response = await api.get('/games/all'); // Call your API endpoint
-        setGames(response.data); // Set the games state with fetched data
+        const response = await api.get('/games/all');
+        setGames(response.data);
       } catch (error) {
         console.error('Error fetching games:', error);
         setError('Failed to load games');

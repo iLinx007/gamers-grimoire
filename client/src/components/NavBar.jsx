@@ -6,6 +6,7 @@ import { AuthContext } from '../context/AuthContext'; // Adjust path as needed
 const Navbar = () => {
   const { user, logout, avatarNumber } = useContext(AuthContext);
   const [avatarSrc, setAvatarSrc] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
 
@@ -30,6 +31,12 @@ const Navbar = () => {
     return avatarSrc; // Fallback to default if no avatar
   };
 
+  const handleSearch = () => {
+    if (searchTerm.trim()) {
+      navigate(`/search?term=${encodeURIComponent(searchTerm.trim())}`);
+    }
+  };
+
   const handleLogout = () => {
     logout(navigate);
   };
@@ -51,11 +58,14 @@ const Navbar = () => {
         <div className="flex items-center space-x-2">
           <input
             type="text"
-            placeholder="Search game..."
+            placeholder="Search game by title or genre..."
             className="px-3 bg-gray-200 py-1 rounded-lg text-gray-800 focus:outline-none"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
           <button
             className="p-2 bg-gray-200 text-blue-600 rounded-lg hover:bg-gray-300 transition duration-200"
+            onClick={handleSearch}
           >
             <MagnifyingGlassIcon className="h-5 w-5 text-black" /> {/* Search Icon */}
           </button>
