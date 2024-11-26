@@ -18,6 +18,10 @@ const gameSchema = new mongoose.Schema({
   averageRating: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
+  image: {
+    type: String,
+    default: 'default-game-image.jpg' // You can set a default image if needed
+  }
 });
 
 // Middleware to update the average rating whenever a new rating is added

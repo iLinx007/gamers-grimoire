@@ -9,7 +9,7 @@ const router = express.Router();
 // Route to add a new game
 router.post('/add', verifyToken, async (req, res) => {
   try {
-    const { title, description, genre, platform, releaseDate } = req.body;
+    const { title, description, genre, platform, addedDate, image } = req.body;
 
     // Check if the game already exists
     const existingGame = await Game.findOne({ title });
@@ -18,7 +18,7 @@ router.post('/add', verifyToken, async (req, res) => {
     }
 
     // Create and save the new game
-    const newGame = new Game({ title, description, genre, platform, releaseDate });
+    const newGame = new Game({ title, description, genre, platform, addedDate, image });
     await newGame.save();
 
     res.status(201).json({ message: 'Game added successfully!', game: newGame });
@@ -33,6 +33,22 @@ router.get('/all', async (req, res) => {
     res.json(games);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching games', error: error.message });
+  }
+});
+
+router.get('/search', async (req, res) => {
+  try {
+    const { term } = req.query;
+    const games = await Game.find({
+      $or: [
+        { title: { $regex: term, $options: 'i' } },
+        { platform: { $regex: term, $options: 'i' } },
+        { genre: { $regex: term, $options: 'i' } }
+      ]
+    });
+    res.json(games);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 
