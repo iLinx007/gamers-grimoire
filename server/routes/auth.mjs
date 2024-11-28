@@ -49,19 +49,6 @@ const verifyToken = (req, res, next) => {
   });
 };
 
-// Route to get the logged-in user's information
-// router.get('/session', verifyToken, async (req, res) => {
-//   try {
-//     const user = await User.findById(req.userId, 'username'); // Fetch only the username
-//     if (!user) {
-//       return res.status(404).json({ message: 'User not found' });
-//     }
-//     res.json({ loggedIn: true, username: user.username });
-//   } catch (error) {
-//     res.status(500).json({ error: 'Server error' });
-//   }
-// });
-
 router.get('/session', (req, res) => {
   const token = req.cookies.token; // Assuming you're using cookies to store the JWT
   if (!token) {
@@ -151,3 +138,25 @@ router.post('/logout', (req, res) => {
 });
 
 export default router;
+
+
+
+
+
+
+
+
+
+
+// Route to get the logged-in user's information
+// router.get('/session', verifyToken, async (req, res) => {
+//   try {
+//     const user = await User.findById(req.userId, 'username'); // Fetch only the username
+//     if (!user) {
+//       return res.status(404).json({ message: 'User not found' });
+//     }
+//     res.json({ loggedIn: true, username: user.username });
+//   } catch (error) {
+//     res.status(500).json({ error: 'Server error' });
+//   }
+// });

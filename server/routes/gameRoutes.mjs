@@ -4,37 +4,17 @@ import Game from '../models/game.mjs'; // Ensure Game.mjs exists in your models 
 import User from '../models/user.mjs'; // Adjust the path as necessary
 import { verifyToken } from '../middleware/authToken.mjs'; // Middleware to verify JWT
 import multer from 'multer';
+import upload from '../middleware/uploadMiddleware.mjs';
 
 
-const upload = multer({ dest: 'uploads/' });
+// const upload = multer({ dest: 'uploads/' });
 
 const router = express.Router();
 
-// Route to add a new game
-// router.post('/add', verifyToken, async (req, res) => {
+// router.post('/add', verifyToken, upload.single('image'), async (req, res) => {
 //   try {
-//     const { title, description, genre, platform, addedDate, image } = req.body;
-
-//     // Check if the game already exists
-//     const existingGame = await Game.findOne({ title });
-//     if (existingGame) {
-//       return res.status(400).json({ message: 'Game already exists' });
-//     }
-
-//     // Create and save the new game
-//     const newGame = new Game({ title, description, genre, platform, addedDate, image });
-//     await newGame.save();
-
-//     res.status(201).json({ message: 'Game added successfully!', game: newGame });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// });
-
-
-// router.post('/add', verifyToken, async (req, res) => {
-//   try {
-//     const { title, description, genre, platform, addedDate, image } = req.body;
+//     const { title, description, genre, platform, addedDate } = req.body;
+//     const image = req.file ? req.file.path : null;
 
 //     // Validate required fields
 //     if (!title || !description || !genre || !platform || !addedDate) {
@@ -51,13 +31,16 @@ const router = express.Router();
 //     const newGame = new Game({ title, description, genre, platform, addedDate, image });
 //     await newGame.save();
 
-//     res.status(201).json({ message: 'Game added successfully!', game: newGame });
+//     res.status(201).json({
+//       message: 'Game added successfully!',
+//       game: newGame,
+//       gameId: newGame._id
+//     });
 //   } catch (error) {
 //     console.error('Error adding game:', error);
 //     res.status(500).json({ error: error.message });
 //   }
 // });
-
 
 router.post('/add', verifyToken, upload.single('image'), async (req, res) => {
   try {
@@ -82,7 +65,7 @@ router.post('/add', verifyToken, upload.single('image'), async (req, res) => {
     res.status(201).json({
       message: 'Game added successfully!',
       game: newGame,
-      gameId: newGame._id // Include the gameId in the response
+      gameId: newGame._id
     });
   } catch (error) {
     console.error('Error adding game:', error);
@@ -178,7 +161,90 @@ router.get('/user/:id', verifyToken, async (req, res) => {
   }
 });
 
-// // In your user routes file
+router.post('/users/:id/add-game', verifyToken, async (req, res) => {
+  const { gameId } = req.body;
+
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Initialize gamesList if it doesn't exist
+    if (!user.gamesList) {
+      user.gamesList = [];
+    }
+
+    if (!user.gamesList.includes(gameId)) {
+      user.gamesList.push(gameId);
+      await user.save();
+      return res.status(200).json({ message: 'Game added successfully!' });
+    } else {
+      return res.status(400).json({ message: 'Game already in your list.' });
+    }
+  } catch (error) {
+    console.error('Error adding game to user:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+export default router;
+
+
+
+
+
+
+
+// Route to add a new game
+// router.post('/add', verifyToken, async (req, res) => {
+//   try {
+//     const { title, description, genre, platform, addedDate, image } = req.body;
+
+//     // Check if the game already exists
+//     const existingGame = await Game.findOne({ title });
+//     if (existingGame) {
+//       return res.status(400).json({ message: 'Game already exists' });
+//     }
+
+//     // Create and save the new game
+//     const newGame = new Game({ title, description, genre, platform, addedDate, image });
+//     await newGame.save();
+
+//     res.status(201).json({ message: 'Game added successfully!', game: newGame });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
+
+
+// router.post('/add', verifyToken, async (req, res) => {
+//   try {
+//     const { title, description, genre, platform, addedDate, image } = req.body;
+
+//     // Validate required fields
+//     if (!title || !description || !genre || !platform || !addedDate) {
+//       return res.status(400).json({ message: 'Missing required fields' });
+//     }
+
+//     // Check if the game already exists
+//     const existingGame = await Game.findOne({ title });
+//     if (existingGame) {
+//       return res.status(400).json({ message: 'Game already exists' });
+//     }
+
+//     // Create and save the new game
+//     const newGame = new Game({ title, description, genre, platform, addedDate, image });
+//     await newGame.save();
+
+//     res.status(201).json({ message: 'Game added successfully!', game: newGame });
+//   } catch (error) {
+//     console.error('Error adding game:', error);
+//     res.status(500).json({ error: error.message });
+//   }
+// });
+
+
 // router.post('/users/:id/add-game', verifyToken, async (req, res) => {
 //   const { gameId } = req.body; // Get the game ID from the request body
 
@@ -229,33 +295,3 @@ router.get('/user/:id', verifyToken, async (req, res) => {
 //     res.status(500).json({ message: 'Internal server error' });
 //   }
 // });
-
-
-router.post('/users/:id/add-game', verifyToken, async (req, res) => {
-  const { gameId } = req.body;
-
-  try {
-    const user = await User.findById(req.params.id);
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    // Initialize gamesList if it doesn't exist
-    if (!user.gamesList) {
-      user.gamesList = [];
-    }
-
-    if (!user.gamesList.includes(gameId)) {
-      user.gamesList.push(gameId);
-      await user.save();
-      return res.status(200).json({ message: 'Game added successfully!' });
-    } else {
-      return res.status(400).json({ message: 'Game already in your list.' });
-    }
-  } catch (error) {
-    console.error('Error adding game to user:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
-
-export default router;

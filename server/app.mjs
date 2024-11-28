@@ -40,6 +40,8 @@ app.use(cors({
 app.use('/api', authRoutes);
 app.use('/api/games', gameRoutes);  
 
+app.use('/uploads', express.static('uploads'));
+
 // Handle base route
 app.get('/', (req, res) => {
   res.send('Gamer\'s Grimoire');
