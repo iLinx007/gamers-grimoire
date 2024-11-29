@@ -73,6 +73,7 @@ import api from '../service/axios.mjs'; // Adjust path as necessary
 import { AuthContext } from '../context/AuthContext'; // Adjust path as necessary
 import { useNavigate } from 'react-router-dom';
 import UserGameCard from './UserGameCard';
+import { enqueueSnackbar } from 'notistack';
 
 const UserProfile = () => {
     const { user } = useContext(AuthContext); // Get user information from context
@@ -116,14 +117,27 @@ const UserProfile = () => {
 
 
     const handleDelete = async (gameId) => {
+
+        const confirmDelete = window.confirm('Are you sure you want to delete this game?');
+        if (!confirmDelete) return;
         try {
-            await api.delete(`/users/games/${gameId}`);
-            setProfileData(prevData => ({
-                ...prevData,
-                gamesList: prevData.gamesList.filter(game => game._id !== gameId)
-            }));
+            const result = await api.delete(`/games/user/${gameId}/delete`);
+            setProfileData(prevData => {
+                if (!prevData || !prevData.gamesList) {
+                    console.error('Profile data is undefined or empty.');
+                    return prevData;
+                }
+                return {
+                    ...prevData,
+                    gamesList: prevData.gamesList.filter(game => game._id !== gameId),
+                };
+            });
+            navigate(0);
+            enqueueSnackbar('Game deleted successfully', { variant: 'success' });
+
         } catch (error) {
             console.error('Error deleting game:', error);
+            enqueueSnackbar('Failed to delete game', { variant: 'error' });
             setError('Failed to delete game');
         }
     };
@@ -132,7 +146,7 @@ const UserProfile = () => {
         const rating = prompt('Rate this game from 1 to 5:');
         if (rating && rating >= 1 && rating <= 5) {
             try {
-                await api.post(`/users/games/${gameId}/rate`, { rating });
+                await api.post(`/games/user/${gameId}/rate`, { rating, userId: user.id });
                 fetchUserProfile(); // Refresh the profile to show updated rating
             } catch (error) {
                 console.error('Error rating game:', error);
@@ -143,7 +157,7 @@ const UserProfile = () => {
 
     const handleComplete = async (gameId) => {
         try {
-            await api.put(`/users/games/${gameId}/complete`);
+            await api.put(`/games/user/${gameId}/complete`, { userId: user.id });
             setProfileData(prevData => ({
                 ...prevData,
                 gamesList: prevData.gamesList.map(game =>

@@ -57,7 +57,7 @@ const GameDetails = () => {
       <p>{game.description}</p>
       <p><strong>Genre:</strong> {game.genre}</p>
       <p><strong>Platform:</strong> {game.platform}</p>
-      <p><strong>Release Date:</strong> {new Date(game.releaseDate).toLocaleDateString()}</p>
+      <p><strong>Date:</strong> {new Date(game.releaseDate).toLocaleDateString()}</p>
       <p><strong>Average Rating:</strong> {game.averageRating || 'No ratings yet'}</p>
 
       <form onSubmit={handleRatingSubmit} className="mt-4">

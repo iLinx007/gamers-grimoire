@@ -25,6 +25,7 @@ const Login = () => {
       }
     } catch (error) {
       console.error('Error logging in:', error);
+      enqueueSnackbar('An error occurred. Please try again.', { variant: 'error' });
       setMessage('An unexpected error occurred');
     }
   };

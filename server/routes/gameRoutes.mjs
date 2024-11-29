@@ -77,7 +77,7 @@ router.get('/search', async (req, res) => {
 });
 
 // Route to add a rating to a game
-router.post('/:gameId/rate', verifyToken, async (req, res) => {
+router.post('user/:gameId/rate', verifyToken, async (req, res) => {
   try {
     const { rating, feedback } = req.body;
     const userId = req.user.userId; // Get user ID from the token
@@ -104,6 +104,69 @@ router.post('/:gameId/rate', verifyToken, async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+
+// router.delete('/user/:gameId/delete', verifyToken, async (req, res) => {
+
+//   // console.log(req.params.gameId)
+//   // console.log(req.user)
+//   console.log(req.user.userId)
+
+
+//   const { gameId } = req.params;
+//   const userId = req.user.userId;
+
+//   try {
+//     const result = await User.updateOne(
+//       { _id: userId },
+//       { $pull: { gamesList: gameId } }
+//     );
+
+//     if (result.modifiedCount === 0) {
+//       return res.status(404).json({ message: 'Game not found in user\'s list' });
+//     }
+
+//     res.status(200).json({ message: 'Game removed successfully' });
+//   } catch (error) {
+//     console.error('Error removing game:', error);
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// });
+
+router.delete('/user/:gameId/delete', verifyToken, async (req, res) => {
+  const { gameId } = req.params;
+  const userId = req.user.userId;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const initialLength = user.gamesList.length;
+    user.gamesList = user.gamesList.filter(id => id.toString() !== gameId);
+
+    if (initialLength === user.gamesList.length) {
+      return res.status(404).json({ message: 'Game not found in user\'s list' });
+    }
+
+    await user.save();
+    res.status(200).json({ message: 'Game removed successfully', gamesList: user.gamesList });
+  } catch (error) {
+    console.error('Error removing game:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
+
+
+// router.post('/user/:gameId/complete', verifyToken, async (req, res) => {
+
+// });
+
+
 
 // Get user by ID
 router.get('/user/:id', verifyToken, async (req, res) => {
