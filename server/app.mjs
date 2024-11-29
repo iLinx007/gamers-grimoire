@@ -10,6 +10,10 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import gameRoutes from './routes/gameRoutes.mjs';
 
+
+const __filename = fileURLToPath(import.meta.url); // Get the current file's path
+const __dirname = path.dirname(__filename);   
+
 dotenv.config();
 
 const app = express();
@@ -40,7 +44,8 @@ app.use(cors({
 app.use('/api', authRoutes);
 app.use('/api/games', gameRoutes);  
 
-app.use('/uploads', express.static('uploads'));
+// app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Handle base route
 app.get('/', (req, res) => {

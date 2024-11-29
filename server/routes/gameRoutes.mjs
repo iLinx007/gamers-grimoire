@@ -3,44 +3,10 @@ import express from 'express';
 import Game from '../models/game.mjs'; // Ensure Game.mjs exists in your models directory
 import User from '../models/user.mjs'; // Adjust the path as necessary
 import { verifyToken } from '../middleware/authToken.mjs'; // Middleware to verify JWT
-import multer from 'multer';
 import upload from '../middleware/uploadMiddleware.mjs';
-
-
-// const upload = multer({ dest: 'uploads/' });
 
 const router = express.Router();
 
-// router.post('/add', verifyToken, upload.single('image'), async (req, res) => {
-//   try {
-//     const { title, description, genre, platform, addedDate } = req.body;
-//     const image = req.file ? req.file.path : null;
-
-//     // Validate required fields
-//     if (!title || !description || !genre || !platform || !addedDate) {
-//       return res.status(400).json({ message: 'Missing required fields' });
-//     }
-
-//     // Check if the game already exists
-//     const existingGame = await Game.findOne({ title });
-//     if (existingGame) {
-//       return res.status(400).json({ message: 'Game already exists' });
-//     }
-
-//     // Create and save the new game
-//     const newGame = new Game({ title, description, genre, platform, addedDate, image });
-//     await newGame.save();
-
-//     res.status(201).json({
-//       message: 'Game added successfully!',
-//       game: newGame,
-//       gameId: newGame._id
-//     });
-//   } catch (error) {
-//     console.error('Error adding game:', error);
-//     res.status(500).json({ error: error.message });
-//   }
-// });
 
 router.post('/add', verifyToken, upload.single('image'), async (req, res) => {
   try {
@@ -152,7 +118,7 @@ router.get('/user/:id', verifyToken, async (req, res) => {
     res.json({
       id: user._id.toString(), // Convert to string if needed
       username: user.username,
-      gamesList: user.gamesList, // Include gamesList if needed
+      gamesList: user.gamesList,
       // Add any other fields you want to return
     });
   } catch (error) {

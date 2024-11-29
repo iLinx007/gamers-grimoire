@@ -72,6 +72,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import api from '../service/axios.mjs'; // Adjust path as necessary
 import { AuthContext } from '../context/AuthContext'; // Adjust path as necessary
 import { useNavigate } from 'react-router-dom';
+import UserGameCard from './UserGameCard';
 
 const UserProfile = () => {
     const { user } = useContext(AuthContext); // Get user information from context
@@ -113,6 +114,48 @@ const UserProfile = () => {
         fetchUserProfile();
     }, [user]);
 
+
+    const handleDelete = async (gameId) => {
+        try {
+            await api.delete(`/users/games/${gameId}`);
+            setProfileData(prevData => ({
+                ...prevData,
+                gamesList: prevData.gamesList.filter(game => game._id !== gameId)
+            }));
+        } catch (error) {
+            console.error('Error deleting game:', error);
+            setError('Failed to delete game');
+        }
+    };
+
+    const handleRate = async (gameId) => {
+        const rating = prompt('Rate this game from 1 to 5:');
+        if (rating && rating >= 1 && rating <= 5) {
+            try {
+                await api.post(`/users/games/${gameId}/rate`, { rating });
+                fetchUserProfile(); // Refresh the profile to show updated rating
+            } catch (error) {
+                console.error('Error rating game:', error);
+                setError('Failed to rate game');
+            }
+        }
+    };
+
+    const handleComplete = async (gameId) => {
+        try {
+            await api.put(`/users/games/${gameId}/complete`);
+            setProfileData(prevData => ({
+                ...prevData,
+                gamesList: prevData.gamesList.map(game =>
+                    game._id === gameId ? { ...game, completed: !game.completed } : game
+                )
+            }));
+        } catch (error) {
+            console.error('Error updating game completion status:', error);
+            setError('Failed to update game completion status');
+        }
+    };
+
     if (error) {
         return <div className="text-red-500">{error}</div>;
     }
@@ -133,18 +176,25 @@ const UserProfile = () => {
             />
 
             <h3 className="mt-4 text-xl font-semibold">Games List</h3>
-            <ul className="w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+                {/* <ul className="w-full"> */}
                 {profileData.gamesList && profileData.gamesList.length > 0 ? (
                     profileData.gamesList.map((gameId) => (
-                        <li key={gameId}>
+                        <div key={gameId}>
                             {/* Fetch game details for each game ID */}
-                            <GameCard gameId={gameId} /> {/* You might want to create a GameCard component to display game details */}
-                        </li>
+                            <UserGameCard
+                                gameId={gameId}
+                                onComplete={handleComplete}
+                                onRate={handleRate}
+                                onDelete={handleDelete}
+                            />
+                        </div>
                     ))
                 ) : (
                     <li>No games added yet.</li>
                 )}
-            </ul>
+                {/* </ul> */}
+            </div>
             <button
                 onClick={() => navigate('/addgame')} // Navigate to Add Game page
                 className="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
@@ -155,38 +205,38 @@ const UserProfile = () => {
     );
 };
 
-const GameCard = ({ gameId }) => {
-    const [game, setGame] = useState(null);
-    const [error, setError] = useState(null);
+// const GameCard = ({ gameId }) => {
+//     const [game, setGame] = useState(null);
+//     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const fetchGameDetails = async () => {
-            try {
-                const response = await api.get(`/games/${gameId}`); // Fetch game details using the game ID
-                setGame(response.data);
-            } catch (error) {
-                console.error('Error fetching game details:', error);
-                setError('Failed to load game details');
-            }
-        };
+//     useEffect(() => {
+//         const fetchGameDetails = async () => {
+//             try {
+//                 const response = await api.get(`/games/${gameId}`); // Fetch game details using the game ID
+//                 setGame(response.data);
+//             } catch (error) {
+//                 console.error('Error fetching game details:', error);
+//                 setError('Failed to load game details');
+//             }
+//         };
 
-        fetchGameDetails();
-    }, [gameId]);
+//         fetchGameDetails();
+//     }, [gameId]);
 
-    if (error) {
-        return <div className="text-red-500">{error}</div>;
-    }
+//     if (error) {
+//         return <div className="text-red-500">{error}</div>;
+//     }
 
-    if (!game) {
-        return <div>Loading game details...</div>; // Show loading state while fetching game data
-    }
+//     if (!game) {
+//         return <div>Loading game details...</div>; // Show loading state while fetching game data
+//     }
 
-    return (
-        <div className="border rounded-lg p-4 shadow-md bg-white mt-2">
-            <h4 className="font-semibold">{game.title}</h4>
-            <p>{game.description.substring(0, 100)}...</p> {/* Truncate description */}
-        </div>
-    );
-};
+//     return (
+//         <div className="border rounded-lg p-4 shadow-md bg-white mt-2">
+//             <h4 className="font-semibold">{game.title}</h4>
+//             <p>{game.description.substring(0, 100)}...</p> {/* Truncate description */}
+//         </div>
+//     );
+// };
 
 export default UserProfile;
