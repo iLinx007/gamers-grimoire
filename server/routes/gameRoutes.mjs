@@ -77,61 +77,65 @@ router.get('/search', async (req, res) => {
 });
 
 // Route to add a rating to a game
-router.post('user/:gameId/rate', verifyToken, async (req, res) => {
-  try {
-    const { rating, feedback } = req.body;
-    const userId = req.user.userId; // Get user ID from the token
+// router.post('user/:gameId/rate', verifyToken, async (req, res) => {
+//   console.log(req);
+//   try {
+//     const { rating, feedback } = req.body;
+//     const userId = req.user.userId; // Get user ID from the token
+    
 
-    // Find the game by ID
-    const game = await Game.findById(req.params.gameId);
+//     // Find the game by ID
+//     const game = await Game.findById(req.params.gameId);
+//     if (!game) {
+//       return res.status(404).json({ message: 'Game not found' });
+//     }
+
+//     // Check if the user has already rated the game
+//     const existingRating = game.ratings.find(r => r.userId.toString() === userId);
+//     if (existingRating) {
+//       return res.status(400).json({ message: 'You have already rated this game' });
+//     }
+
+//     // Add the rating and update the average rating
+//     game.ratings.push({ userId, rating, feedback });
+//     game.calculateAverageRating();
+//     await game.save();
+
+//     res.status(201).json({ message: 'Rating added successfully', game });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
+
+router.post('/user/:gameId/rate', verifyToken, async (req, res) => {
+  const { gameId } = req.params;
+  const { rating } = req.body;
+  const userId = req.user.userId;
+
+  try {
+    // Validate rating
+    if (!rating || rating < 1 || rating > 5) {
+      return res.status(400).json({ message: 'Invalid rating. Must be between 1 and 5.' });
+    }
+
+    // Find the game and update its ratings
+    const game = await Game.findById(gameId);
     if (!game) {
       return res.status(404).json({ message: 'Game not found' });
     }
 
-    // Check if the user has already rated the game
-    const existingRating = game.ratings.find(r => r.userId.toString() === userId);
-    if (existingRating) {
-      return res.status(400).json({ message: 'You have already rated this game' });
-    }
-
-    // Add the rating and update the average rating
-    game.ratings.push({ userId, rating, feedback });
+    // Add the new rating to the game's ratings array
+    game.ratings.push({ userId, rating });
     game.calculateAverageRating();
     await game.save();
 
-    res.status(201).json({ message: 'Rating added successfully', game });
+    res.status(200).json({ message: 'Game rated successfully' });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error('Error rating game:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 
-
-// router.delete('/user/:gameId/delete', verifyToken, async (req, res) => {
-
-//   // console.log(req.params.gameId)
-//   // console.log(req.user)
-//   console.log(req.user.userId)
-
-
-//   const { gameId } = req.params;
-//   const userId = req.user.userId;
-
-//   try {
-//     const result = await User.updateOne(
-//       { _id: userId },
-//       { $pull: { gamesList: gameId } }
-//     );
-
-//     if (result.modifiedCount === 0) {
-//       return res.status(404).json({ message: 'Game not found in user\'s list' });
-//     }
-
-//     res.status(200).json({ message: 'Game removed successfully' });
-//   } catch (error) {
-//     console.error('Error removing game:', error);
-//     res.status(500).json({ message: 'Internal server error' });
-//   }
-// });
 
 router.delete('/user/:gameId/delete', verifyToken, async (req, res) => {
   const { gameId } = req.params;

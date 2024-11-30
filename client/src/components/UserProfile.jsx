@@ -133,7 +133,7 @@ const UserProfile = () => {
                 };
             });
             navigate(0);
-            enqueueSnackbar('Game deleted successfully', { variant: 'success' });
+            enqueueSnackbar('Game removed successfully', { variant: 'success' });
 
         } catch (error) {
             console.error('Error deleting game:', error);
@@ -144,16 +144,35 @@ const UserProfile = () => {
 
     const handleRate = async (gameId) => {
         const rating = prompt('Rate this game from 1 to 5:');
-        if (rating && rating >= 1 && rating <= 5) {
-            try {
-                await api.post(`/games/user/${gameId}/rate`, { rating, userId: user.id });
-                fetchUserProfile(); // Refresh the profile to show updated rating
-            } catch (error) {
-                console.error('Error rating game:', error);
-                setError('Failed to rate game');
-            }
+
+        // Validate input
+        if (!rating || isNaN(rating) || rating < 1 || rating > 5 || !Number.isInteger(Number(rating))) {
+            enqueueSnackbar('Please enter a valid rating between 1 and 5.', { variant: 'warning' });
+            return;
+        }
+
+        try {
+            // Send the rating to the server
+            const response = await api.post(`/games/user/${gameId}/rate`, { rating: Number(rating) });
+            // Optimistically update the local state
+            setProfileData(prevData => {
+                if (!prevData || !prevData.gamesList) return prevData;
+
+                return {
+                    ...prevData,
+                    gamesList: prevData.gamesList.map(game =>
+                        game._id === gameId ? { ...game, rating: Number(rating) } : game
+                    ),
+                };
+            });
+
+            enqueueSnackbar(response.message, { variant: 'success' });
+        } catch (error) {
+            console.error('Error rating game:', error);
+            enqueueSnackbar('Failed to rate game. Please try again later.', { variant: 'error' });
         }
     };
+
 
     const handleComplete = async (gameId) => {
         try {
