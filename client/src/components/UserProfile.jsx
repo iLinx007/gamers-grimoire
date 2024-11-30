@@ -155,6 +155,7 @@ const UserProfile = () => {
             // Send the rating to the server
             const response = await api.post(`/games/user/${gameId}/rate`, { rating: Number(rating) });
             // Optimistically update the local state
+            enqueueSnackbar(response.data.message, { variant: 'success' });
             setProfileData(prevData => {
                 if (!prevData || !prevData.gamesList) return prevData;
 
@@ -166,7 +167,6 @@ const UserProfile = () => {
                 };
             });
 
-            enqueueSnackbar(response.message, { variant: 'success' });
         } catch (error) {
             console.error('Error rating game:', error);
             enqueueSnackbar('Failed to rate game. Please try again later.', { variant: 'error' });

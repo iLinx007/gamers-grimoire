@@ -32,7 +32,7 @@
 // export default GameCard;
 import React from 'react';
 
-const GameCard = ({ game }) => {
+const GameCard = ({ game, onAdd }) => {
   const imagePath = game.image
     ? `${import.meta.env.VITE_APP_BACKEND_URL}/${game.image}`
     : '/defaultGame.jpg';
@@ -59,9 +59,13 @@ const GameCard = ({ game }) => {
         </p>
         <p className="text-sm text-gray-500">
           <strong>Average Rating:</strong>{' '}
-          <span className="text-yellow-500">{game.averageRating.toFixed(1)}</span>
+          <span className="text-yellow-500">{game.averageRating.toFixed(2)}</span>
         </p>
       </div>
+
+      <div className="mt-4 flex justify-center pb-2">
+          <button onClick={() => onAdd(game._id)} className="px-2 py-1 text-sm bg-green-500 text-black rounded hover:bg-green-600 transition duration-200">Add to my list</button>
+        </div>
     </div>
   );
 };
