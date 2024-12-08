@@ -43,10 +43,10 @@ app.use(cors({
 // app.use('/auth', authRoutes);
 app.use('/api', authRoutes);
 // Logging middleware
-app.use((req, _, next) => {
-  console.log(req.path.toUpperCase(), req.body);
-  next();
- });
+// app.use((req, _, next) => {
+//   console.log(req.path.toUpperCase(), req.body);
+//   next();
+//  });
   
 app.use('/api/games', gameRoutes);
 
