@@ -3,11 +3,11 @@ Milestone 04 - Final Project Documentation
 
 ### NetID
 ---
-kb4242
+la2544
 
 ### Name
 ---
-Kwaaku Boamah-Powers
+Lincoln Ahiadu
 
 ### Repository Link
 ---
@@ -16,12 +16,6 @@ Kwaaku Boamah-Powers
 ### URL for deployed site
 ---
 [Gamer's Grimoire](http://linserv1.cims.nyu.edu:12170/)
-
-
-
-
-
-
 
 ### URL for Form 1
 ---
@@ -46,18 +40,6 @@ After adding a game, the game will be listed under games created by the user and
 - [Home Page](http://linserv1.cims.nyu.edu:12170/)
 - [User profile](http://linserv1.cims.nyu.edu:12170/profile)
 
-<!-- ### URL for Form 3
----
-[Update Profile Form](http://linserv1.cims.nyu.edu:12165/update-profile)
-
-### Special Instructions for Form 3
----
-User must be logged in to be able to update profile
-
-### URL for Form 3 Result
----
-After updating user profile, the changes can be seen from the user's profile page<br>
-- [Profile](http://linserv1.cims.nyu.edu:12165/profile) -->
 
 -- ### First link to github line number(s) for constructor, HOF, etc.
 ---
