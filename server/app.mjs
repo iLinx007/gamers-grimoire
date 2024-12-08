@@ -42,7 +42,13 @@ app.use(cors({
 // Set up the routes
 // app.use('/auth', authRoutes);
 app.use('/api', authRoutes);
-app.use('/api/games', gameRoutes);  
+// Logging middleware
+app.use((req, _, next) => {
+  console.log(req.path.toUpperCase(), req.body);
+  next();
+ });
+  
+app.use('/api/games', gameRoutes);
 
 // app.use('/uploads', express.static('uploads'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));

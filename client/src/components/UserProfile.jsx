@@ -174,20 +174,20 @@ const UserProfile = () => {
     };
 
 
-    const handleComplete = async (gameId) => {
-        try {
-            await api.put(`/games/user/${gameId}/complete`, { userId: user.id });
-            setProfileData(prevData => ({
-                ...prevData,
-                gamesList: prevData.gamesList.map(game =>
-                    game._id === gameId ? { ...game, completed: !game.completed } : game
-                )
-            }));
-        } catch (error) {
-            console.error('Error updating game completion status:', error);
-            setError('Failed to update game completion status');
-        }
-    };
+    // const handleComplete = async (gameId) => {
+    //     try {
+    //         await api.put(`/games/user/${gameId}/complete`, { userId: user.id });
+    //         setProfileData(prevData => ({
+    //             ...prevData,
+    //             gamesList: prevData.gamesList.map(game =>
+    //                 game._id === gameId ? { ...game, completed: !game.completed } : game
+    //             )
+    //         }));
+    //     } catch (error) {
+    //         console.error('Error updating game completion status:', error);
+    //         setError('Failed to update game completion status');
+    //     }
+    // };
 
     if (error) {
         return <div className="text-red-500">{error}</div>;
@@ -217,7 +217,7 @@ const UserProfile = () => {
                             {/* Fetch game details for each game ID */}
                             <UserGameCard
                                 gameId={gameId}
-                                onComplete={handleComplete}
+                                // onComplete={handleComplete}
                                 onRate={handleRate}
                                 onDelete={handleDelete}
                             />

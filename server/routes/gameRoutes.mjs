@@ -48,18 +48,6 @@ router.get('/all', async (req, res) => {
   }
 });
 
-router.get('/:gameId', async (req, res) => {
-  try {
-    const game = await Game.findById(req.params.gameId);
-    if (!game) {
-      return res.status(404).json({ message: 'Game not found' });
-    }
-    res.json(game);
-  } catch (error) {
-    res.status(500).json({ message: 'Error fetching game', error: error.message });
-  }
-});
-
 router.get('/search', async (req, res) => {
   try {
     const { term } = req.query;
@@ -75,6 +63,22 @@ router.get('/search', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+
+
+router.get('/:gameId', async (req, res) => {
+  try {
+    const game = await Game.findById(req.params.gameId);
+    if (!game) {
+      return res.status(404).json({ message: 'Game not found' });
+    }
+    res.json(game);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching game', error: error.message });
+  }
+});
+
+
 
 // Route to add a rating to a game
 // router.post('user/:gameId/rate', verifyToken, async (req, res) => {

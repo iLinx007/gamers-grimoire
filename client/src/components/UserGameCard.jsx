@@ -107,9 +107,9 @@ const UserGameCard = ({ gameId, onDelete, onRate, onComplete }) => {
         <p className="text-gray-600 mb-2"><strong>Genre:</strong> {Array.isArray(game.genre) ? game.genre.join(', ') : 'N/A'} </p>
         <p className="text-gray-600 mb-2"><strong>Platforms:</strong> {Array.isArray(game.platform) ? game.platform.join(', ') : 'N/A'}</p>
         <p className="text-sm text-gray-500 mb-2">{game.description ? `${game.description.substring(0, 100)}...` : 'No description available'}</p>
-        <p className="text-sm text-gray-500 mb-2"><strong>Status:</strong> {game.completed ? 'Completed' : 'In Progress'}</p>
+        {/* <p className="text-sm text-gray-500 mb-2"><strong>Status:</strong> {game.completed ? 'Completed' : 'In Progress'}</p> */}
         <div className="mt-4 flex justify-between">
-          <button onClick={() => onComplete(game._id)} className="px-2 py-1 text-sm bg-green-500 text-black rounded hover:bg-green-600 transition duration-200">{game.completed ? 'Uncomplete' : 'Complete'}</button>
+          {/* <button onClick={() => onComplete(game._id)} className="px-2 py-1 text-sm bg-green-500 text-black rounded hover:bg-green-600 transition duration-200">{game.completed ? 'Uncomplete' : 'Complete'}</button> */}
           <button onClick={() => onRate(game._id)} className="px-2 py-1 text-sm bg-yellow-500 text-black rounded hover:bg-yellow-600 transition duration-200">Rate</button>
           <button onClick={() => onDelete(game._id)} className="px-2 py-1 text-sm bg-red-500 text-black rounded hover:bg-red-600 transition duration-200">Delete</button>
         </div>
