@@ -10,6 +10,8 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import gameRoutes from './routes/gameRoutes.mjs';
 
+// time to fix the upload feature and add extra functionality
+
 
 const __filename = fileURLToPath(import.meta.url); // Get the current file's path
 const __dirname = path.dirname(__filename);   
