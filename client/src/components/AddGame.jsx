@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../service/axios.mjs';
+import axios from 'axios';
 import { useSnackbar } from 'notistack';
 import { AuthContext } from '../context/AuthContext'; // Import AuthContext
 
@@ -10,10 +11,19 @@ const AddGame = () => {
   const [genre, setGenre] = useState('');
   const [platform, setPlatform] = useState('');
   const [addedDate, setAddedDate] = useState('');
-  const [image, setImage] = useState(null);
+  //const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+  const cloudName = import.meta.env.CLOUDINARY_CLOUD_NAME;
+
+
+
+  const [image, setImage] = useState(null);
+  const [imageURL, setImageURL] = useState('');
+  const [message, setMessage] = useState('');
+
+
   
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -37,15 +47,26 @@ const AddGame = () => {
     setSuccessMessage(null);
 
     try {
-      const formData = new FormData();
-      formData.append('title', title);
-      formData.append('description', description);
-      formData.append('genre', genre);
-      formData.append('platform', platform);
-      formData.append('addedDate', new Date(addedDate).toISOString());
+
+      let uploadedImageURL = '';
+
       if (image) {
-        formData.append('image', image);
+        const cloudinaryFormData = new FormData();
+        cloudinaryFormData.append('file', image);
+        cloudinaryFormData.append('upload_preset', 'gamer\'s_grimoire');
+
+        const cloudinaryResponse = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, cloudinaryFormData);
+        uploadedImageURL = cloudinaryResponse.data.secure_url;
       }
+
+      const gameData = new FormData();
+      gameData.append('title', title);
+      gameData.append('description', description);
+      gameData.append('genre', genre);
+      gameData.append('platform', platform);
+      gameData.append('addedDate', new Date(addedDate).toISOString());
+      gameData.append('imageUrl', uploadedImageURL);
+      
       const response = await api.post('/games/add', formData, {
         withCredentials: true,
         headers: { 'Content-Type': 'multipart/form-data' }
