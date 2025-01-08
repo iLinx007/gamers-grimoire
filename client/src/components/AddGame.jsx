@@ -15,7 +15,9 @@ const AddGame = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
-  const cloudName = import.meta.env.CLOUDINARY_CLOUD_NAME;
+  const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+
+  console.log(cloudName);
 
 
 
@@ -67,7 +69,7 @@ const AddGame = () => {
       gameData.append('addedDate', new Date(addedDate).toISOString());
       gameData.append('imageUrl', uploadedImageURL);
       
-      const response = await api.post('/games/add', formData, {
+      const response = await api.post('/games/add', gameData, {
         withCredentials: true,
         headers: { 'Content-Type': 'multipart/form-data' }
       });

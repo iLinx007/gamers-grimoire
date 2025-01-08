@@ -1,39 +1,9 @@
-// import React from 'react';
-
-// const GameCard = ({ game }) => {
-
-//   // const imagePath = game.image 
-//   //   ? `/uploads/${game.image.replace(/^uploads\\/, '').replace(/\\/g, '/')}`
-//   //   : '/defaultGame.jpg';
-
-//   const imagePath = game.image 
-//     ? `${import.meta.env.VITE_APP_BACKEND_URL}/${game.image}`
-//     : '/defaultGame.jpg';
-
-
-//   return (
-//     <div className="bg-white rounded-lg shadow-md overflow-hidden">
-//       <img 
-//         src={imagePath} 
-//         alt={game.title} 
-//         className="w-full h-48 object-cover"
-//       />
-//       <div className="p-4">
-//         <h3 className="text-xl font-semibold mb-2">{game.title}</h3>
-//         <p className="text-gray-600 mb-2"><strong>Genre:</strong> {game.genre.join(', ')}</p>
-//         <p className="text-gray-600 mb-2"><strong>Platforms:</strong> {game.platform.join(', ')}</p>
-//         <p className="text-sm text-gray-500 mb-2">{game.description.substring(0, 100)}...</p>
-//         <p className="text-sm text-gray-500"><strong>Average Rating:</strong> {game.averageRating.toFixed(1)}</p>
-//       </div>
-//     </div>
-//   );
-// };
 
 // export default GameCard;
 import React from 'react';
 
 const GameCard = ({ game, onAdd }) => {
-  const imagePath = game.image
+  const imagePath = game.imageUrl
     ? `${import.meta.env.VITE_APP_BACKEND_URL}/${game.image}`
     : '/defaultGame.jpg';
 
