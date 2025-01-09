@@ -10,8 +10,8 @@ const router = express.Router();
 
 router.post('/add', verifyToken, upload.single('image'), async (req, res) => {
   try {
-    const { title, description, genre, platform, addedDate } = req.body;
-    const image = req.file ? req.file.path : null;
+    const { title, description, genre, platform, addedDate, image } = req.body;
+    // const image = req.file ? req.file.path : null;
 
     // Validate required fields
     if (!title || !description || !genre || !platform || !addedDate) {

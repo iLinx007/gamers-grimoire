@@ -7,6 +7,8 @@ const GameCard = ({ game, onAdd }) => {
     ? `${import.meta.env.VITE_APP_BACKEND_URL}/${game.image}`
     : '/defaultGame.jpg';
 
+    console.log(imagePath);
+
   return (
     <div className="bg-white rounded-lg shadow-2xl hover:shadow-[0px_8px_30px_rgba(0,0,0,0.5)] transition-shadow duration-300 ease-in-out overflow-hidden">
       {/* Image Section */}

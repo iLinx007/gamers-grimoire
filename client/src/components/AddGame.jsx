@@ -16,20 +16,15 @@ const AddGame = () => {
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-
-  console.log(cloudName);
-
-
-
   const [image, setImage] = useState(null);
-  const [imageURL, setImageURL] = useState('');
-  const [message, setMessage] = useState('');
+  // const [imageURL, setImageURL] = useState('');
+  // const [message, setMessage] = useState('');
 
 
   
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { user } = useContext(AuthContext); // Get user information from context
+  const { user } = useContext(AuthContext);
 
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -58,7 +53,9 @@ const AddGame = () => {
         cloudinaryFormData.append('upload_preset', 'gamer\'s_grimoire');
 
         const cloudinaryResponse = await axios.post(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, cloudinaryFormData);
+        //console.log(cloudinaryResponse);
         uploadedImageURL = cloudinaryResponse.data.secure_url;
+        setImage(uploadedImageURL);
       }
 
       const gameData = new FormData();
@@ -67,7 +64,7 @@ const AddGame = () => {
       gameData.append('genre', genre);
       gameData.append('platform', platform);
       gameData.append('addedDate', new Date(addedDate).toISOString());
-      gameData.append('imageUrl', uploadedImageURL);
+      gameData.append('image', uploadedImageURL);
       
       const response = await api.post('/games/add', gameData, {
         withCredentials: true,

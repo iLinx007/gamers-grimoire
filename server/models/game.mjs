@@ -20,7 +20,7 @@ const gameSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
   image: {
     type: String,
-    default: 'default-game-image.jpg' // You can set a default image if needed
+    default: 'default-game-image.jpg'
   }
 });
 
