@@ -3,11 +3,11 @@
 import React from 'react';
 
 const GameCard = ({ game, onAdd }) => {
-  const imagePath = game.imageUrl
-    ? `${import.meta.env.VITE_APP_BACKEND_URL}/${game.image}`
-    : '/defaultGame.jpg';
+  // const imagePath = game.imageUrl
+  //   ? `${import.meta.env.VITE_APP_BACKEND_URL}/${game.image}`
+  //   : '/defaultGame.jpg';
 
-    console.log(imagePath);
+  const imagePath = game.image ? game.image : '/defaultGame.jpg';
 
   return (
     <div className="bg-white rounded-lg shadow-2xl hover:shadow-[0px_8px_30px_rgba(0,0,0,0.5)] transition-shadow duration-300 ease-in-out overflow-hidden">

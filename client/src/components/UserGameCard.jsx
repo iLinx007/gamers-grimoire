@@ -91,9 +91,10 @@ const UserGameCard = ({ gameId, onDelete, onRate, onComplete }) => {
   if (error) return <div className="text-red-500">{error}</div>;
   if (!game) return <div>No game data available</div>;
 
-  const imagePath = game.image
-    ? `${import.meta.env.VITE_APP_BACKEND_URL}/${game.image}`
-    : '/defaultGame.jpg';
+  // const imagePath = game.image
+  //   ? `${import.meta.env.VITE_APP_BACKEND_URL}/${game.image}`
+  //   : '/defaultGame.jpg';
+    const imagePath = game.image ? game.image : '/defaultGame.jpg';
 
   return (
     <div className="bg-white rounded-lg shadow-2xl hover:shadow-[0px_8px_30px_rgba(0,0,0,0.5)] transition-shadow duration-300 ease-in-out overflow-hidden">
