@@ -9,6 +9,7 @@ import dotenv from 'dotenv';
 import cors from 'cors'; 
 import cookieParser from 'cookie-parser';
 import gameRoutes from './routes/gameRoutes.mjs';
+import userGameRoutes from './routes/userGameRoutes.mjs';
 
 // time to fix the upload feature and add extra functionality
 
@@ -42,17 +43,17 @@ app.use(cors({
 
 
 // Set up the routes
-// app.use('/auth', authRoutes);
 app.use('/api', authRoutes);
+app.use('/api/games', gameRoutes);
+app.use('/api/user-games', userGameRoutes);
+
+// app.use('/auth', authRoutes);
 // Logging middleware
 // app.use((req, _, next) => {
 //   console.log(req.path.toUpperCase(), req.body);
 //   next();
 //  });
   
-app.use('/api/games', gameRoutes);
-
-// app.use('/uploads', express.static('uploads'));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Handle base route
