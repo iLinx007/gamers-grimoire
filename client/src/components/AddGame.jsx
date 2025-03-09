@@ -9,22 +9,61 @@ const AddGame = () => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [genre, setGenre] = useState('');
-  const [platform, setPlatform] = useState('');
+  const [showGenreDropdown, setShowGenreDropdown] = useState(false);
+  const genres = [
+    'Action',
+    'Adventure',
+    'RPG',
+    'Strategy',
+    'Sports',
+    'Racing',
+    'Simulation',
+    'Puzzle',
+    'Horror',
+    'Fighting',
+    'Shooter',
+    'Platformer',
+    'MMORPG',
+    'Battle Royale'
+  ];
+  const [platforms, setPlatforms] = useState({
+    PC: false,
+    XBOX: false,
+    Playstation: false,
+    Nintendo: false
+  });
+  const [showPlatformDropdown, setShowPlatformDropdown] = useState(false);
   const [addedDate, setAddedDate] = useState('');
-  //const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
   const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
   const [image, setImage] = useState(null);
-  // const [imageURL, setImageURL] = useState('');
-  // const [message, setMessage] = useState('');
 
 
   
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useContext(AuthContext);
+
+  const handlePlatformChange = (platform) => {
+    setPlatforms(prev => ({
+      ...prev,
+      [platform]: !prev[platform]
+    }));
+  };
+
+  const getSelectedPlatforms = () => {
+    return Object.entries(platforms)
+      .filter(([_, isSelected]) => isSelected)
+      .map(([platform]) => platform);
+  };
+
+  const getSelectedPlatformsText = () => {
+    const selected = getSelectedPlatforms();
+    if (selected.length === 0) return 'Select Platforms';
+    return selected.join(', ');
+  };
 
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -43,8 +82,13 @@ const AddGame = () => {
     setError(null);
     setSuccessMessage(null);
 
-    try {
+    const selectedPlatforms = getSelectedPlatforms();
+    if (selectedPlatforms.length === 0) {
+      enqueueSnackbar('Please select at least one platform', { variant: 'warning' });
+      return;
+    }
 
+    try {
       let uploadedImageURL = '';
 
       if (image) {
@@ -62,7 +106,7 @@ const AddGame = () => {
       gameData.append('title', title);
       gameData.append('description', description);
       gameData.append('genre', genre);
-      gameData.append('platform', platform);
+      gameData.append('platform', JSON.stringify(selectedPlatforms));
       gameData.append('addedDate', new Date(addedDate).toISOString());
       gameData.append('image', uploadedImageURL);
       
@@ -82,7 +126,12 @@ const AddGame = () => {
       setTitle('');
       setDescription('');
       setGenre('');
-      setPlatform('');
+      setPlatforms({
+        PC: false,
+        XBOX: false,
+        Playstation: false,
+        Nintendo: false
+      });
       setAddedDate('');
       setImage(null);
       setImagePreview(null);
@@ -130,24 +179,64 @@ const AddGame = () => {
 
           <div>
             <label className="block text-gray-700 font-semibold mb-1">Genre</label>
-            <input
-              type="text"
-              value={genre}
-              onChange={(e) => setGenre(e.target.value)}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-            />
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowGenreDropdown(!showGenreDropdown)}
+                className="w-full px-4 py-2 text-left border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 bg-white"
+              >
+                {genre || 'Select Genre'}
+              </button>
+              
+              {showGenreDropdown && (
+                <div className="absolute top-full left-0 mt-1 w-full bg-white border rounded-md shadow-lg z-10 max-h-48 overflow-y-auto">
+                  {genres.map((genreOption) => (
+                    <div
+                      key={genreOption}
+                      className="px-4 py-2 hover:bg-gray-50 cursor-pointer"
+                      onClick={() => {
+                        setGenre(genreOption);
+                        setShowGenreDropdown(false);
+                      }}
+                    >
+                      {genreOption}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           <div>
-            <label className="block text-gray-700 font-semibold mb-1">Platform</label>
-            <input
-              type="text"
-              value={platform}
-              onChange={(e) => setPlatform(e.target.value)}
-              required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
-            />
+            <label className="block text-gray-700 font-semibold mb-1">Platforms</label>
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => setShowPlatformDropdown(!showPlatformDropdown)}
+                className="w-full px-4 py-2 text-left border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 bg-white"
+              >
+                {getSelectedPlatformsText()}
+              </button>
+              
+              {showPlatformDropdown && (
+                <div className="absolute top-full left-0 mt-1 w-full bg-white border rounded-md shadow-lg z-10">
+                  {Object.keys(platforms).map((platform) => (
+                    <label
+                      key={platform}
+                      className="flex items-center px-4 py-2 hover:bg-gray-50 cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={platforms[platform]}
+                        onChange={() => handlePlatformChange(platform)}
+                        className="form-checkbox h-4 w-4 text-green-500 rounded focus:ring-green-400"
+                      />
+                      <span className="ml-2 text-gray-700">{platform}</span>
+                    </label>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           <div>
@@ -177,12 +266,21 @@ const AddGame = () => {
             </div>
           )}
 
-          <button
-            type="submit"
-            className="w-full py-2 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition duration-200"
-          >
-            Add Game
-          </button>
+          <div className="flex gap-4">
+            <button
+              type="submit"
+              className="flex-1 py-2 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition duration-200"
+            >
+              Add Game
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/profile')}
+              className="flex-1 py-2 bg-gray-500 text-white rounded-lg font-semibold hover:bg-gray-600 transition duration-200"
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       </div>
     </div>
