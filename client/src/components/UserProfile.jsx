@@ -7,6 +7,7 @@ import { enqueueSnackbar } from 'notistack';
 import { getUserGameList } from '../service/userGameService';
 import Settings from './Settings';
 import RatingModal from './RatingModal';
+import ConfirmationModal from './ConfirmationModal';
 
 const UserProfile = () => {
     const { user } = useContext(AuthContext);
@@ -17,7 +18,9 @@ const UserProfile = () => {
     const [avatarSrc, setAvatarSrc] = useState('');
     const [isSettingsOpen, setIsSettingsOpen] = useState(false);
     const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
+    const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
     const [selectedGameId, setSelectedGameId] = useState(null);
+    const [selectedGameToDelete, setSelectedGameToDelete] = useState(null);
     const [currentGameRating, setCurrentGameRating] = useState(0);
     const navigate = useNavigate();
 
@@ -59,13 +62,16 @@ const UserProfile = () => {
     }, [user]);
 
     const handleDelete = async (gameId) => {
-        const confirmDelete = window.confirm('Are you sure you want to remove this game from your list?');
-        if (!confirmDelete) return;
-        
+        setSelectedGameToDelete(gameId);
+        setIsConfirmationModalOpen(true);
+    };
+
+    const handleConfirmDelete = async () => {
         try {
-            await api.delete(`/user-games/${user.id}/${gameId}`);
-            setUserGames(prevGames => prevGames.filter(game => game.gameId._id !== gameId));
+            await api.delete(`/user-games/${user.id}/${selectedGameToDelete}`);
+            setUserGames(prevGames => prevGames.filter(game => game.gameId._id !== selectedGameToDelete));
             enqueueSnackbar('Game removed successfully', { variant: 'success' });
+            setIsConfirmationModalOpen(false);
         } catch (error) {
             console.error('Error removing game:', error);
             enqueueSnackbar('Failed to remove game', { variant: 'error' });
@@ -311,6 +317,13 @@ const UserProfile = () => {
                 onClose={() => setIsRatingModalOpen(false)}
                 onSubmit={handleRateSubmit}
                 initialRating={currentGameRating}
+            />
+            <ConfirmationModal
+                isOpen={isConfirmationModalOpen}
+                onClose={() => setIsConfirmationModalOpen(false)}
+                onConfirm={handleConfirmDelete}
+                title="Remove Game"
+                message="Are you sure you want to remove this game from your list? This action cannot be undone."
             />
         </div>
     );
