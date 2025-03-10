@@ -50,7 +50,7 @@ const Games = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-xl text-gray-600">Loading games...</div>
+        <div className="text-xl text-gray-400 animate-pulse">Loading games...</div>
       </div>
     );
   }
@@ -58,7 +58,7 @@ const Games = () => {
   if (error) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-xl text-red-500">{error}</div>
+        <div className="text-xl text-red-500 animate-fade-in">{error}</div>
       </div>
     );
   }
@@ -66,15 +66,17 @@ const Games = () => {
   if (!games.length) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-xl text-gray-600">No games available</div>
+        <div className="text-xl text-gray-400 animate-fade-in">No games available</div>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-center">Games Library</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="container mx-auto px-4 py-8 animate-fade-in">
+      <h1 className="text-3xl font-bold mb-8 text-center text-green-400 animate-slide-in">
+        Games Library
+      </h1>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 stagger-children">
         {games.map(game => (
           <GameCard key={game._id} game={game} onAdd={handleAddToList} />
         ))}

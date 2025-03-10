@@ -2,10 +2,25 @@
 import mongoose from 'mongoose';
 
 const ratingSchema = new mongoose.Schema({
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  rating: { type: Number, min: 0, max: 5, required: true },
-  feedback: { type: String },
-  createdAt: { type: Date, default: Date.now },
+  userId: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User', 
+    required: true 
+  },
+  rating: { 
+    type: Number, 
+    min: 1, 
+    max: 5, 
+    required: true 
+  },
+  createdAt: { 
+    type: Date, 
+    default: Date.now 
+  },
+  updatedAt: { 
+    type: Date, 
+    default: Date.now 
+  }
 });
 
 const gameSchema = new mongoose.Schema({
@@ -24,11 +39,11 @@ const gameSchema = new mongoose.Schema({
   }
 });
 
-// Middleware to update the average rating whenever a new rating is added
-gameSchema.methods.calculateAverageRating = function () {
+// Middleware to update the average rating whenever a new rating is added or updated
+gameSchema.methods.calculateAverageRating = function() {
   if (this.ratings.length > 0) {
     const total = this.ratings.reduce((sum, rating) => sum + rating.rating, 0);
-    this.averageRating = total / this.ratings.length;
+    this.averageRating = parseFloat((total / this.ratings.length).toFixed(1));
   } else {
     this.averageRating = 0;
   }

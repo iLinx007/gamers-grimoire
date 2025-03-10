@@ -122,18 +122,42 @@ router.post('/user/:gameId/rate', verifyToken, async (req, res) => {
       return res.status(400).json({ message: 'Invalid rating. Must be between 1 and 5.' });
     }
 
-    // Find the game and update its ratings
+    // Find the game
     const game = await Game.findById(gameId);
     if (!game) {
       return res.status(404).json({ message: 'Game not found' });
     }
 
-    // Add the new rating to the game's ratings array
-    game.ratings.push({ userId, rating });
+    // Check if user has already rated this game
+    const existingRating = game.ratings.find(r => r.userId.toString() === userId);
+    if (existingRating) {
+      // Update existing rating instead of adding a new one
+      existingRating.rating = rating;
+      existingRating.updatedAt = new Date();
+      game.markModified('ratings');
+    } else {
+      // Add new rating
+      game.ratings.push({ 
+        userId, 
+        rating,
+        createdAt: new Date(),
+        updatedAt: new Date()
+      });
+    }
+
+    // Recalculate average rating
     game.calculateAverageRating();
     await game.save();
 
-    res.status(200).json({ message: 'Game rated successfully' });
+    const message = existingRating 
+      ? 'Rating updated successfully' 
+      : 'Rating submitted successfully';
+
+    res.status(200).json({ 
+      message,
+      averageRating: game.averageRating,
+      isUpdate: !!existingRating
+    });
   } catch (error) {
     console.error('Error rating game:', error);
     res.status(500).json({ message: 'Internal server error' });

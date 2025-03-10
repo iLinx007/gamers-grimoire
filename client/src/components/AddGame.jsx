@@ -148,52 +148,69 @@ const AddGame = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-md w-96 max-w-lg">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Add a New Game</h2>
+    <div className="flex items-center justify-center min-h-screen bg-gray-900 py-8">
+      <div className="bg-gray-800 p-8 rounded-lg shadow-2xl w-96 max-w-lg animate-scale-in">
+        <h2 className="text-3xl font-bold mb-6 text-center text-green-400 animate-fade-in">
+          Add a New Game
+        </h2>
         
-        {error && <div className="mb-4 text-red-500 text-center">{error}</div>}
-        {successMessage && <div className="mb-4 text-green-500 text-center">{successMessage}</div>}
+        {error && (
+          <div className="mb-4 text-red-500 text-center animate-fade-in">
+            {error}
+          </div>
+        )}
+        {successMessage && (
+          <div className="mb-4 text-green-500 text-center animate-fade-in">
+            {successMessage}
+          </div>
+        )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-gray-700 font-semibold mb-1">Title</label>
+        <form onSubmit={handleSubmit} className="space-y-4 stagger-children">
+          <div className="transform transition-all duration-300 hover:translate-x-2">
+            <label className="block text-gray-300 font-semibold mb-1">Title</label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg 
+                focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent
+                transition-all duration-300"
             />
           </div>
 
-          <div>
-            <label className="block text-gray-700 font-semibold mb-1">Description</label>
+          <div className="transform transition-all duration-300 hover:translate-x-2">
+            <label className="block text-gray-300 font-semibold mb-1">Description</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg 
+                focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent
+                transition-all duration-300 min-h-[100px]"
             />
           </div>
 
-          <div>
-            <label className="block text-gray-700 font-semibold mb-1">Genre</label>
+          <div className="transform transition-all duration-300 hover:translate-x-2">
+            <label className="block text-gray-300 font-semibold mb-1">Genre</label>
             <div className="relative">
               <button
                 type="button"
                 onClick={() => setShowGenreDropdown(!showGenreDropdown)}
-                className="w-full px-4 py-2 text-left border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 bg-white"
+                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg 
+                  focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent
+                  transition-all duration-300 text-left"
               >
                 {genre || 'Select Genre'}
               </button>
               
               {showGenreDropdown && (
-                <div className="absolute top-full left-0 mt-1 w-full bg-white border rounded-md shadow-lg z-10 max-h-48 overflow-y-auto">
+                <div className="absolute left-0 w-full bg-gray-700 border border-gray-600 
+                  rounded-md shadow-lg z-10 bottom-full mb-1 max-h-60 overflow-y-auto animate-fade-in">
                   {genres.map((genreOption) => (
                     <div
                       key={genreOption}
-                      className="px-4 py-2 hover:bg-gray-50 cursor-pointer"
+                      className="px-4 py-2 hover:bg-gray-600 cursor-pointer text-white transition-colors duration-200"
                       onClick={() => {
                         setGenre(genreOption);
                         setShowGenreDropdown(false);
@@ -207,23 +224,26 @@ const AddGame = () => {
             </div>
           </div>
 
-          <div>
-            <label className="block text-gray-700 font-semibold mb-1">Platforms</label>
+          <div className="transform transition-all duration-300 hover:translate-x-2">
+            <label className="block text-gray-300 font-semibold mb-1">Platforms</label>
             <div className="relative">
               <button
                 type="button"
                 onClick={() => setShowPlatformDropdown(!showPlatformDropdown)}
-                className="w-full px-4 py-2 text-left border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400 bg-white"
+                className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg 
+                  focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent
+                  transition-all duration-300 text-left"
               >
                 {getSelectedPlatformsText()}
               </button>
               
               {showPlatformDropdown && (
-                <div className="absolute top-full left-0 mt-1 w-full bg-white border rounded-md shadow-lg z-10">
+                <div className="absolute left-0 w-full bg-gray-700 border border-gray-600 
+                  rounded-md shadow-lg z-10 bottom-full mb-1 animate-fade-in">
                   {Object.keys(platforms).map((platform) => (
                     <label
                       key={platform}
-                      className="flex items-center px-4 py-2 hover:bg-gray-50 cursor-pointer"
+                      className="flex items-center px-4 py-2 hover:bg-gray-600 cursor-pointer text-white transition-colors duration-200"
                     >
                       <input
                         type="checkbox"
@@ -231,7 +251,7 @@ const AddGame = () => {
                         onChange={() => handlePlatformChange(platform)}
                         className="form-checkbox h-4 w-4 text-green-500 rounded focus:ring-green-400"
                       />
-                      <span className="ml-2 text-gray-700">{platform}</span>
+                      <span className="ml-2">{platform}</span>
                     </label>
                   ))}
                 </div>
@@ -239,44 +259,50 @@ const AddGame = () => {
             </div>
           </div>
 
-          <div>
-            <label className="block text-gray-700 font-semibold mb-1">Date</label>
+          <div className="transform transition-all duration-300 hover:translate-x-2">
+            <label className="block text-gray-300 font-semibold mb-1">Date</label>
             <input
               type="date"
               value={addedDate}
               onChange={(e) => setAddedDate(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg 
+                focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent
+                transition-all duration-300"
             />
           </div>
 
-          <div>
-            <label className="block text-gray-700 font-semibold mb-1">Game Image</label>
+          <div className="transform transition-all duration-300 hover:translate-x-2">
+            <label className="block text-gray-300 font-semibold mb-1">Game Image</label>
             <input
               type="file"
               accept="image/*"
               onChange={handleImageChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-400"
+              className="w-full px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg 
+                focus:outline-none focus:ring-2 focus:ring-green-400 focus:border-transparent
+                transition-all duration-300"
             />
           </div>
 
           {imagePreview && (
-            <div className="mt-2">
-              <img src={imagePreview} alt="Preview" className="max-w-full h-auto rounded-lg" />
+            <div className="mt-2 animate-scale-in">
+              <img src={imagePreview} alt="Preview" className="max-w-full h-auto rounded-lg shadow-xl" />
             </div>
           )}
 
-          <div className="flex gap-4">
+          <div className="flex gap-4 pt-4">
             <button
               type="submit"
-              className="flex-1 py-2 bg-green-500 text-white rounded-lg font-semibold hover:bg-green-600 transition duration-200"
+              className="flex-1 py-2 bg-green-500 text-white rounded-lg font-semibold 
+                hover:bg-green-600 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
             >
               Add Game
             </button>
             <button
               type="button"
               onClick={() => navigate('/profile')}
-              className="flex-1 py-2 bg-gray-500 text-white rounded-lg font-semibold hover:bg-gray-600 transition duration-200"
+              className="flex-1 py-2 bg-gray-600 text-white rounded-lg font-semibold 
+                hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg"
             >
               Cancel
             </button>
