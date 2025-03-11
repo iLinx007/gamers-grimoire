@@ -26,6 +26,7 @@ const Settings = ({ isOpen, onClose }) => {
         window.location.reload();
       }
     } catch (error) {
+      console.error('Error updating profile:', error);
       enqueueSnackbar(error.response?.data?.message || 'Failed to update profile', { variant: 'error' });
     }
   };
@@ -51,6 +52,7 @@ const Settings = ({ isOpen, onClose }) => {
         onClose();
       }
     } catch (error) {
+      console.error('Error updating password:', error);
       enqueueSnackbar(error.response?.data?.message || 'Failed to update password', { variant: 'error' });
     }
   };
@@ -64,6 +66,7 @@ const Settings = ({ isOpen, onClose }) => {
         navigate('/');
       }
     } catch (error) {
+      console.error('Error deleting account:', error);
       enqueueSnackbar(error.response?.data?.message || 'Failed to delete account', { variant: 'error' });
     }
   };

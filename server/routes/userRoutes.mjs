@@ -1,12 +1,12 @@
-const express = require('express');
+import express from 'express';
+import User from '../models/user.mjs';
+import bcrypt from 'bcryptjs';
+import { verifyToken } from '../middleware/authToken.mjs';
+
 const router = express.Router();
-const User = require('../models/user');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const auth = require('../middleware/auth');
 
 // Update user profile
-router.put('/:id', auth, async (req, res) => {
+router.put('/:id', verifyToken, async (req, res) => {
   try {
     const { username } = req.body;
     
@@ -33,7 +33,7 @@ router.put('/:id', auth, async (req, res) => {
 });
 
 // Update password
-router.put('/:id/password', auth, async (req, res) => {
+router.put('/:id/password', verifyToken, async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
     const user = await User.findById(req.params.id);
@@ -63,7 +63,7 @@ router.put('/:id/password', auth, async (req, res) => {
 });
 
 // Delete account
-router.delete('/:id', auth, async (req, res) => {
+router.delete('/:id', verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
 
@@ -81,4 +81,4 @@ router.delete('/:id', auth, async (req, res) => {
   }
 });
 
-module.exports = router; 
+export default router; 

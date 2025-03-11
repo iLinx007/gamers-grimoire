@@ -10,6 +10,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import gameRoutes from './routes/gameRoutes.mjs';
 import userGameRoutes from './routes/userGameRoutes.mjs';
+import userRoutes from './routes/userRoutes.mjs';
 
 // time to fix the upload feature and add extra functionality
 
@@ -31,19 +32,24 @@ app.use(session({
   secret: 'secret',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: false }
+  cookie: { 
+    secure: false,
+    sameSite: 'lax'
+  }
 }));
 app.use(cookieParser());
 
+// CORS configuration
 app.use(cors({
-  origin: process.env.CLIENT,  
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],  
-  credentials: true          
+  origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
-
 
 // Set up the routes
 app.use('/api', authRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/games', gameRoutes);
 app.use('/api/user-games', userGameRoutes);
 
@@ -58,10 +64,18 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Handle base route
 app.get('/', (req, res) => {
-  res.send('Gamer\'s Grimoire');
+  res.send('Gamer\'s Grimoire API');
+});
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
 });
 
 // Start server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server is running on:`);
+  console.log(`- Local: http://localhost:${port}`);
+  console.log(`- Network: http://0.0.0.0:${port}`);
 });

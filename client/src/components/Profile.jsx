@@ -4,6 +4,8 @@ import UserGameCard from './UserGameCard';
 import api from '../service/axios.mjs';
 import { enqueueSnackbar } from 'notistack';
 import Settings from './Settings';
+import { useNavigate } from 'react-router-dom';
+import { StarIcon, HeartIcon, ClockIcon, FireIcon } from '@heroicons/react/24/solid';
 
 const Profile = () => {
   const { user, avatarNumber } = useContext(AuthContext);
@@ -11,6 +13,8 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [avatarSrc, setAvatarSrc] = useState(null);
+  const [activeTab, setActiveTab] = useState('all');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserGames = async () => {
@@ -63,6 +67,33 @@ const Profile = () => {
     console.log('Rating game:', gameId);
   };
 
+  const handleLogout = async () => {
+    try {
+      await api.post('/logout', {}, { withCredentials: true });
+      navigate('/login');
+    } catch (error) {
+      console.error('Error logging out:', error);
+      enqueueSnackbar('Failed to log out', { variant: 'error' });
+    }
+  };
+
+  const handleAddGame = () => {
+    navigate('/games/add');
+  };
+
+  const filteredGames = () => {
+    switch (activeTab) {
+      case 'favorites':
+        return userGames.filter(game => game.isFavorite);
+      case 'recent':
+        return [...userGames].sort((a, b) => new Date(b.addedDate) - new Date(a.addedDate));
+      case 'top':
+        return [...userGames].sort((a, b) => b.averageRating - a.averageRating);
+      default:
+        return userGames;
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-900 pt-24 px-4">
@@ -94,39 +125,26 @@ const Profile = () => {
                 </p>
               </div>
             </div>
-            <button
-              onClick={() => setIsSettingsOpen(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-700 text-green-400 rounded-lg
-                hover:bg-gray-600 hover:text-green-300 transition-all duration-300 transform hover:scale-105
-                border border-green-500/30 hover:border-green-400/50 shadow-lg hover:shadow-green-500/20"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            <div className="flex space-x-4">
+              <button
+                onClick={handleAddGame}
+                className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
-              <span className="font-medium">Settings</span>
-            </button>
+                Add Game
+              </button>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Games Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-          {userGames.map(userGame => (
+          {filteredGames().map(userGame => (
             <UserGameCard
               key={userGame.gameId._id}
               gameId={userGame.gameId._id}
