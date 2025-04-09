@@ -16,21 +16,21 @@ import { Routes } from 'react-router-dom';
 function App() {
   return (
     <SnackbarProvider maxStack={3}>
-    {/* <div className="font-edu text-lg"> */}
-      <div className="font-jaro text-lg">
-      <Navbar />
-      <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/profile" element={<UserProfile />} />
-          <Route path="/search" element={<SearchResults />} />          
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/addgame" element={<AddGame />} />
-          <Route path="/games/all" element={<Games />} />
-          <Route path="/games/:gameId" element={<GameDetails />} />
-      </Routes>
-      
-    </div>
+      <div className="font-jaro text-lg min-h-screen bg-gray-900">
+        <Navbar />
+        <main className="pt-20 px-4 sm:px-6 lg:px-8 pb-12">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/profile" element={<UserProfile />} />
+            <Route path="/search" element={<SearchResults />} />          
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/addgame" element={<AddGame />} />
+            <Route path="/games/all" element={<Games />} />
+            <Route path="/games/:gameId" element={<GameDetails />} />
+          </Routes>
+        </main>
+      </div>
     </SnackbarProvider>
   );
 }

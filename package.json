@@ -1,10 +1,13 @@
 {
-  "name": "final-project-ilinx007",
+  "name": "final-project-iLinx007",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "vite"
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm start",
+    "client": "cd client && npm run dev",
+    "install-all": "npm install && cd client && npm install && cd ../server && npm install"
   },
   "repository": {
     "type": "git",
@@ -19,6 +22,7 @@
   "homepage": "https://github.com/nyu-csci-ua-0467-001-002-fall-2024/final-project-iLinx007#readme",
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.3",
+    "concurrently": "^8.2.2",
     "vite": "^5.4.10"
   }
 }

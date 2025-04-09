@@ -245,8 +245,8 @@ const Games = () => {
     <div className="relative animate-fade-in">
       {/* Filter Toggle Button */}
       <div className="sticky top-0 z-20 bg-gray-900 shadow-lg">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-green-400 animate-slide-in">
+        <div className="container mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-green-400 animate-slide-in">
             Games Library
           </h1>
           <button
@@ -261,15 +261,16 @@ const Games = () => {
                 d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" 
               />
             </svg>
-            <span>Filters {showFilters ? '(Hide)' : '(Show)'}</span>
+            <span className="hidden sm:inline">Filters</span>
+            <span className="sm:hidden">{showFilters ? 'Hide' : 'Show'}</span>
           </button>
         </div>
 
         {/* Filters Section */}
         <div className={`filters-section container mx-auto px-4 overflow-hidden transition-all duration-300 
-          ${showFilters ? 'max-h-72 opacity-100 py-2' : 'max-h-0 opacity-0'}`}>
-          <div className="bg-gray-800 rounded-lg p-4 shadow-lg border border-gray-700">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+          ${showFilters ? 'max-h-[28rem] sm:max-h-72 opacity-100 py-2' : 'max-h-0 opacity-0'}`}>
+          <div className="bg-gray-800 rounded-lg p-3 sm:p-4 shadow-lg border border-gray-700">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               {/* Genre Filter */}
               <div className="relative">
                 <div className="flex items-center">
@@ -349,7 +350,7 @@ const Games = () => {
                 </div>
                 {showPlatformDropdown && (
                   <div className="absolute left-0 right-0 mt-1 bg-gray-700 border border-gray-600 
-                    rounded-lg shadow-lg z-30 text-sm">
+                    rounded-lg shadow-lg z-30 max-h-48 overflow-y-auto text-sm">
                     {platforms.map((platform) => (
                       <button
                         key={platform}
@@ -385,7 +386,7 @@ const Games = () => {
                 onClick={clearFilters}
                 className="px-3 py-1.5 bg-gray-700 text-white rounded-lg hover:bg-gray-600
                   transition-all duration-300 border border-gray-600 focus:outline-none
-                  focus:ring-2 focus:ring-green-400 flex items-center justify-center gap-2 text-sm h-[34px] mt-auto"
+                  focus:ring-2 focus:ring-green-400 flex items-center justify-center gap-2 text-sm"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
@@ -403,9 +404,9 @@ const Games = () => {
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-6">
         {/* Games Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 stagger-children">
+        <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 stagger-children">
           {filteredGames.map(game => (
             <GameCard key={game._id} game={game} onAdd={handleAddToList} />
           ))}

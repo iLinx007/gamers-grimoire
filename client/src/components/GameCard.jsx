@@ -24,14 +24,15 @@ const GameCard = ({ game, onAdd }) => {
           relative bg-gray-800 rounded-lg shadow-lg
           transition-all duration-500 ease-out
           ${isExpanded ? 
-            'transform scale-110 rotate-0 translate-y-0 z-30 shadow-[0_20px_50px_rgba(0,0,0,0.3)]' : 
+            'transform scale-105 sm:scale-110 rotate-0 translate-y-0 z-30 shadow-[0_20px_50px_rgba(0,0,0,0.3)]' : 
             'transform scale-100 rotate-0 translate-y-0 hover:scale-105'
           }
         `}
         onMouseEnter={() => setIsExpanded(true)}
         onMouseLeave={() => setIsExpanded(false)}
       >
-        <div className="relative overflow-hidden rounded-t-lg h-32">
+        {/* Image Container */}
+        <div className="relative overflow-hidden rounded-t-lg aspect-[4/3]">
           <img
             src={imagePath}
             alt={game.title}
@@ -40,6 +41,7 @@ const GameCard = ({ game, onAdd }) => {
               transition-all duration-500
               ${isExpanded ? 'transform scale-110' : 'transform scale-100 hover:scale-110'}
             `}
+            loading="lazy"
           />
           <div 
             className={`
@@ -54,7 +56,7 @@ const GameCard = ({ game, onAdd }) => {
                   e.stopPropagation();
                   onAdd(game._id);
                 }}
-                className="px-3 py-1 bg-green-500 text-white text-sm rounded-lg
+                className="px-3 py-1.5 bg-green-500 text-white text-sm rounded-lg
                   transition-all duration-500 transform
                   hover:bg-green-600 hover:scale-105 hover:shadow-lg
                   opacity-100 translate-y-0"
@@ -65,17 +67,21 @@ const GameCard = ({ game, onAdd }) => {
           </div>
         </div>
 
+        {/* Game Info */}
         <div className="p-3 space-y-1">
-          <h3 className="text-base font-semibold text-white line-clamp-1">{game.title}</h3>
+          <h3 className="text-base font-semibold text-white line-clamp-1" title={game.title}>
+            {game.title}
+          </h3>
           
           <div className="space-y-1 text-sm">
-            <p className="text-gray-300 line-clamp-1">
+            <p className="text-gray-300 line-clamp-1" title={game.genre.join(', ')}>
               <span className="text-gray-400">Genre:</span> {game.genre.join(', ')}
             </p>
-            <p className="text-gray-300 line-clamp-1">
+            <p className="text-gray-300 line-clamp-1" title={game.platform.join(', ')}>
               <span className="text-gray-400">Platforms:</span> {game.platform.join(', ')}
             </p>
             
+            {/* Description (only shown when expanded) */}
             <div className={`
               overflow-hidden transition-all duration-500
               ${isExpanded ? 'max-h-24' : 'max-h-0'}
